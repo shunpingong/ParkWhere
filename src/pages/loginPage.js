@@ -12,14 +12,12 @@ import Grid from '@mui/material/Grid';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
+      {'Copyright © ParkWhere '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
@@ -39,8 +37,9 @@ export default function LoginPage(name) {
       password: data.get('password'),
     });
   };
-  
+
 console.log(name);
+const navigate = useNavigate();
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -111,7 +110,7 @@ console.log(name);
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href= "" onClick = {() => navigate("/forgot-password")} variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>
