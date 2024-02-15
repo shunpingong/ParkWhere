@@ -44,7 +44,7 @@ export default function SignUp() {
         createUserWithEmailAndPassword(auth, email, password) // create user with email and password
             .then(() => { // if successful
                 writePlayerData(email, 1000, [], true);
-                navigate('/menu');
+                navigate('/menu'); // navigate to main menu page
             })
             .catch((err) => { // if unsuccessful
                 switch (err.code) {
