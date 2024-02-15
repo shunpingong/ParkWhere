@@ -13,6 +13,7 @@ import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import GoogleIcon from '@mui/icons-material/Google';
 
 function Copyright(props) {
   return (
@@ -103,19 +104,28 @@ const navigate = useNavigate();
               <Button
                 type="submit"
                 fullWidth
+                href = "/homePage"
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
                 Sign In
               </Button>
-              <Grid container>
+              <Button
+                variant="soft"
+                color="neutral"
+                fullWidth
+                startIcon={<GoogleIcon />}
+              >
+                Continue with Google
+              </Button>
+              <Grid container>  
                 <Grid item xs>
-                  <Link href= "" onClick = {() => navigate("/forgot-password")} variant="body2">
+                  <Link href= "" onClick = {() => navigate("/forgot-password")} variant="body1">
                     Forgot password?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="#" onClick= { () => navigate("/sign-up")} variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
