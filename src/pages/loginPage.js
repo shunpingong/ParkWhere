@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import GoogleIcon from '@mui/icons-material/Google';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { auth } from "../backend/firebase";
 
 function Copyright(props) {
@@ -39,7 +39,6 @@ export default function LoginPage(name) {
       email: data.get('email'),
       password: data.get('password'),
     });
-    console.log("Login successful");
   };
 
   const navigate = useNavigate();
@@ -120,7 +119,6 @@ export default function LoginPage(name) {
               <Button
                 type="submit"
                 fullWidth
-                href = "/homePage"
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
@@ -132,7 +130,6 @@ export default function LoginPage(name) {
                 fullWidth
                 startIcon={<GoogleIcon />}
                 onClick = {handleGoogle}
-                onCompleted = {() => navigate("/homePage")} // redirect to homePage after successful login
               >
                 Continue with Google
               </Button>

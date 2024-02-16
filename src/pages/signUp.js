@@ -41,7 +41,7 @@ export default function SignUp() {
         e.preventDefault(); // prevent page from refreshing
         createUserWithEmailAndPassword(auth, email, password) // create user with email and password
             .then(() => { // if successful
-                navigate('/LoginPage'); // navigate to main menu page
+                navigate('/homePage'); // navigate to main menu page
             })
             .catch((err) => { // if unsuccessful
                 switch (err.code) {
