@@ -18,17 +18,15 @@ import { ref, update, get, onValue } from "firebase/database";
 import { writePlayerData } from "../backend/command";
 
 function Copyright(props) {
-  return (
+    return (
       <Typography variant="body2" color="text.secondary" align="center" {...props}>
-          {'Copyright © '}
-          <Link color="inherit" href="">
-              ParkWhere
-          </Link>{' '}
-          {new Date().getFullYear()}
-          {'.'}
+        {'Copyright © ParkWhere '}
+        {new Date().getFullYear()}
+        {'.'}
       </Typography>
-  );
-}
+    );
+  }
+  
 
 const defaultTheme = createTheme();
 
@@ -43,8 +41,7 @@ export default function SignUp() {
         e.preventDefault(); // prevent page from refreshing
         createUserWithEmailAndPassword(auth, email, password) // create user with email and password
             .then(() => { // if successful
-                writePlayerData(email, 1000, [], true);
-                navigate('/menu'); // navigate to main menu page
+                navigate('/LoginPage'); // navigate to main menu page
             })
             .catch((err) => { // if unsuccessful
                 switch (err.code) {

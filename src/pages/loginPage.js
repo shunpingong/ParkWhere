@@ -14,6 +14,8 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import GoogleIcon from '@mui/icons-material/Google';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from "../backend/firebase";
 
 function Copyright(props) {
   return (
@@ -30,17 +32,31 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function LoginPage(name) {
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get('email'),
       password: data.get('password'),
     });
+    console.log("Login successful");
   };
 
-console.log(name);
-const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  const handleGoogle = async () => {
+    try {
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup(auth, provider);
+        // If signInWithPopup succeeds, navigate to the desired page
+        if (result) {
+            navigate('/homePage');
+        }
+    } catch (error) {
+        // Handle any errors that occur during sign-in
+        console.error("Error signing in with Google:", error.message);
+    }
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -115,6 +131,8 @@ const navigate = useNavigate();
                 color="neutral"
                 fullWidth
                 startIcon={<GoogleIcon />}
+                onClick = {handleGoogle}
+                onCompleted = {() => navigate("/homePage")} // redirect to homePage after successful login
               >
                 Continue with Google
               </Button>
