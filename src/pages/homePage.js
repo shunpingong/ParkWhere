@@ -8,11 +8,11 @@ import { useNavigate } from 'react-router-dom';
 export default function HomePage() {
 
     const navigate = useNavigate();
-    
+
     const handleLogout = () => {               
         signOut(auth).then(() => {
         // Sign-out successful.
-            navigate("/");
+            navigate("/"); // Redirect to login page
             console.log("Signed out successfully")
         }).catch((error) => {
         // An error happened.
@@ -26,7 +26,9 @@ export default function HomePage() {
                     Home Page
                 </Typography>
             </Box>
-            <Button onClick= {handleLogout}>
+            <Button 
+                onClick= {handleLogout}
+            >
                 Logout
             </Button>
         </Container>

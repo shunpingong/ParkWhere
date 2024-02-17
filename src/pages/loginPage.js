@@ -13,9 +13,9 @@ import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import GoogleIcon from '@mui/icons-material/Google';
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { auth } from "../backend/firebase";
+import { GoogleButton } from 'react-google-button';
 
 function Copyright(props) {
   return (
@@ -112,27 +112,25 @@ export default function LoginPage(name) {
                 id="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 1 }}
               >
                 Sign In
               </Button>
-              <Button
-                variant="soft"
-                color="neutral"
-                fullWidth
-                startIcon={<GoogleIcon />}
-                onClick = {handleGoogle}
-              >
-                Continue with Google
-              </Button>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+                >
+                <text>or</text>
+                <GoogleButton label = 'Continue with Google' onClick = {handleGoogle} />
+              </Box>
+              
               <Grid container>  
                 <Grid item xs>
                   <Link href= "" onClick = {() => navigate("/forgot-password")} variant="body1">
