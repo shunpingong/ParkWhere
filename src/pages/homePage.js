@@ -22,9 +22,17 @@ export default function HomePage() {
     return (
         <Container>
             <Box>
-                <Typography variant="h4" component="h1" gutterBottom>
+                <Typography variant="h2" component="h1" gutterBottom>
                     Home Page
                 </Typography>
+                <Typography variant="h3" component="h2" gutterBottom>
+                    {localStorage.getItem("name")}
+                </Typography>
+                <Typography variant="h4" component="h3" gutterBottom>
+                    {localStorage.getItem("email")}
+                </Typography>
+                <img src={localStorage.getItem("profilePic")} alt="Profile Picture" />
+
             </Box>
             <Button 
                 onClick= {handleLogout}

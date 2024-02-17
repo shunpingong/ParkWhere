@@ -43,19 +43,24 @@ export default function LoginPage(name) {
 
   const navigate = useNavigate();
 
-  const handleGoogle = async () => {
-    try {
-        const provider = new GoogleAuthProvider();
-        const result = await signInWithPopup(auth, provider);
-        // If signInWithPopup succeeds, navigate to the desired page
-        if (result) {
-            navigate('/homePage');
-        }
-    } catch (error) {
-        // Handle any errors that occur during sign-in
-        console.error("Error signing in with Google:", error.message);
-    }
-  }
+  const signInWithGoogle = async () => {
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      await signInWithPopup(auth, provider)
+        .then((result) => {
+          const name = result.user.displayName;
+          const email = result.user.email;
+          const profilePic = result.user.photoURL;
+
+          localStorage.setItem("name", name);
+          localStorage.setItem("email", email);
+          localStorage.setItem("profilePic", profilePic);
+
+          navigate("/homePage");
+        }).catch((error) => {
+          console.log(error);
+        });
+      };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -128,7 +133,7 @@ export default function LoginPage(name) {
                 }}
                 >
                 <text>or</text>
-                <GoogleButton label = 'Continue with Google' onClick = {handleGoogle} />
+                <GoogleButton label = 'Continue with Google' onClick = {signInWithGoogle} />
               </Box>
               
               <Grid container>  
