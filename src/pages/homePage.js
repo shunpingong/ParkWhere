@@ -11,6 +11,7 @@ export default function HomePage() {
 
     const handleLogout = () => {               
         signOut(auth).then(() => {
+            localStorage.clear();
         // Sign-out successful.
             navigate("/"); // Redirect to login page
             console.log("Signed out successfully")

@@ -12,10 +12,9 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, db } from "../backend/firebase";
+import { auth } from "../backend/firebase";
 import { useNavigate } from 'react-router-dom';
-import { ref, update, get, onValue } from "firebase/database";
-import { writePlayerData } from "../backend/command";
+import validator from 'validator';
 
 function Copyright(props) {
     return (
@@ -27,21 +26,31 @@ function Copyright(props) {
     );
   }
   
-
 const defaultTheme = createTheme();
 
 export default function SignUp() {
     const [errorMessage, setErrorMessage] = useState("");
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [tel, setTel] = useState('');
 
     const navigate = useNavigate();
 
     const handleSignUp = (e) => {
         e.preventDefault(); // prevent page from refreshing
+        // Additional validation for name and phone number
+        if (!name.trim()) {
+            setErrorMessage('Name should not be empty.');
+            return;
+        }
+        if (validator.isMobilePhone(tel, 'en-SG') === false) {
+            setErrorMessage('Invalid phone number.');
+            return;
+        }
         createUserWithEmailAndPassword(auth, email, password) // create user with email and password
             .then(() => { // if successful
-                navigate('/homePage'); // navigate to main menu page
+                    navigate('/homePage'); // navigate to main menu page
             })
             .catch((err) => { // if unsuccessful
                 switch (err.code) {
@@ -65,7 +74,7 @@ export default function SignUp() {
                         break;
                 }
             });
-    }
+        };
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -87,12 +96,42 @@ export default function SignUp() {
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSignUp} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="name"
+                                    label="Full name"
+                                    placeholder='Lim Bo Seng'
+                                    type="name"
+                                    id="name"
+                                    autoComplete = "name"
+                                    value = {name}
+                                    onChange = {(e) => setName(e.target.value)}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="tel"
+                                    label="Phone number"
+                                    placeholder='+65xxxxxxxx'
+                                    helperText = "Please enter your phone number in the format +65xxxxxxxx"
+                                    type="tel"
+                                    id="tel"
+                                    autoComplete= "tel"
+                                    value = {tel}
+                                    onChange = {(e) => setTel(e.target.value)}
+                                />
+                            </Grid>
                             <Grid item xs={12}>
                                 <TextField
                                     required
                                     fullWidth
                                     id="email"
                                     label="Email Address"
+                                    placeholder='test@example.com'
                                     name="email"
                                     autoComplete="email"
                                     value={email}

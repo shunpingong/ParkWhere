@@ -1,10 +1,10 @@
+// Your existing code with UI improvements
+
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
@@ -13,13 +13,15 @@ import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { useState } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from "../backend/firebase";
 import { GoogleButton } from 'react-google-button';
 
-function Copyright(props) {
+function Copyright() {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+    <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © ParkWhere '}
       {new Date().getFullYear()}
       {'.'}
@@ -27,17 +29,31 @@ function Copyright(props) {
   );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
-
 const defaultTheme = createTheme();
 
-export default function LoginPage(name) {
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const HandleSignIn = (e) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log(userCredential);
+        navigate('/homePage');
+      })
+      .catch((err) => {
+        if (err.code === 'auth/user-not-found' || err.code === "auth/invalid-email") {
+            setErrorMessage('Invalid Email, no user found with the provided email.');
+        } else if (err.code === 'auth/wrong-password') {
+            setErrorMessage('Invalid Password, the password is incorrect.');
+        }else if (err.code === 'auth/missing-password') {
+            setErrorMessage('Please enter your password.');
+        }else {
+            setErrorMessage(err.message);
+        }
+        console.log(err);
     });
   };
 
@@ -72,7 +88,7 @@ export default function LoginPage(name) {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+            backgroundImage: 'url(https://source.unsplash.com/random?parking)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -94,9 +110,9 @@ export default function LoginPage(name) {
               <LocalParkingIcon/>
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              Sign in to ParkWhere
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate onSubmit={HandleSignIn} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -106,6 +122,8 @@ export default function LoginPage(name) {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <TextField
                 margin="normal"
@@ -116,39 +134,50 @@ export default function LoginPage(name) {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
+              
+              <Typography color="error">{errorMessage}</Typography>
+        
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 1 }}
+                sx={{ mt: 3, mb: 1, backgroundColor: 'primary.main', '&:hover': { backgroundColor: 'primary.dark' } }}
               >
                 Sign In
               </Button>
               <Box
                 sx={{
+                  pb: 2,
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                 }}
-                >
-                <text>or</text>
-                <GoogleButton label = 'Continue with Google' onClick = {signInWithGoogle} />
+              >
+                <Typography variant="subtitle1" gutterBottom>Or continue with</Typography>
+                <GoogleButton label="Google" onClick={signInWithGoogle} />
               </Box>
               
-              <Grid container>  
+              <Grid container spacing={1}>  
                 <Grid item xs>
-                  <Link href= "" onClick = {() => navigate("/forgot-password")} variant="body1">
+                  <Link variant="body2" onClick={() => navigate("/forgot-password")}>
                     Forgot password?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" onClick= { () => navigate("/sign-up")} variant="body2">
+                  <Link variant="body2" onClick={() => navigate("/sign-up")}>
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
+              <Box mt={5}>
+                <Typography variant="body2" color="text.secondary" align="center">
+                  ParkWhere helps you find parking spots hassle-free.
+                </Typography>
+              </Box>
+              <Copyright />
             </Box>
           </Box>
         </Grid>
