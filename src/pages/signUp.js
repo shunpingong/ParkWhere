@@ -16,16 +16,16 @@ import { auth } from "../backend/firebase";
 import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
 
-function Copyright(props) {
+function Copyright() {
     return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
-        {'Copyright © ParkWhere '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
+        <Typography variant="body2" color="text.secondary" align="center">
+            {'Copyright © ParkWhere '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
     );
-  }
-  
+}
+
 const defaultTheme = createTheme();
 
 export default function SignUp() {
@@ -50,7 +50,7 @@ export default function SignUp() {
         }
         createUserWithEmailAndPassword(auth, email, password) // create user with email and password
             .then(() => { // if successful
-                    navigate('/homePage'); // navigate to main menu page
+                navigate('/homePage'); // navigate to main menu page
             })
             .catch((err) => { // if unsuccessful
                 switch (err.code) {
@@ -74,7 +74,7 @@ export default function SignUp() {
                         break;
                 }
             });
-        };
+    };
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -96,18 +96,18 @@ export default function SignUp() {
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSignUp} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
-                        <Grid item xs={12}>
+                            <Grid item xs={12}>
                                 <TextField
                                     required
                                     fullWidth
                                     name="name"
-                                    label="Full name"
+                                    label="Full Name"
                                     placeholder='Lim Bo Seng'
-                                    type="name"
+                                    type="text"
                                     id="name"
-                                    autoComplete = "name"
-                                    value = {name}
-                                    onChange = {(e) => setName(e.target.value)}
+                                    autoComplete="name"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -115,14 +115,14 @@ export default function SignUp() {
                                     required
                                     fullWidth
                                     name="tel"
-                                    label="Phone number"
+                                    label="Phone Number"
                                     placeholder='+65xxxxxxxx'
-                                    helperText = "Please enter your phone number in the format +65xxxxxxxx"
+                                    helperText="Please enter your phone number in the format +65xxxxxxxx"
                                     type="tel"
                                     id="tel"
-                                    autoComplete= "tel"
-                                    value = {tel}
-                                    onChange = {(e) => setTel(e.target.value)}
+                                    autoComplete="tel"
+                                    value={tel}
+                                    onChange={(e) => setTel(e.target.value)}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -152,8 +152,10 @@ export default function SignUp() {
                                 />
                             </Grid>
                         </Grid>
-                        <Box>
-                            <Typography color="red">{errorMessage}</Typography>
+                        <Box mt={2} mb={1}>
+                            <Typography variant="body2" color="error">
+                                {errorMessage}
+                            </Typography>
                         </Box>
                         <Button
                             type="submit"
@@ -172,12 +174,12 @@ export default function SignUp() {
                         </Grid>
                     </Box>
                 </Box>
-            <Box mt={3}>
-                <Typography variant="body2" color="text.secondary" align="center">
-                ParkWhere helps you find parking spots hassle-free.
-                </Typography>
-            </Box>
-            <Copyright/>
+                <Box mt={3}>
+                    <Typography variant="body2" color="text.secondary" align="center">
+                        ParkWhere helps you find parking spots hassle-free.
+                    </Typography>
+                </Box>
+                <Copyright />
             </Container>
         </ThemeProvider>
     );

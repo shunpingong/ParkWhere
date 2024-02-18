@@ -1,5 +1,3 @@
-// Your existing code with UI improvements
-
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -85,7 +83,7 @@ export default function LoginPage() {
         <Grid
           item
           xs={false}
-          sm={4}
+          sm={10}
           md={7}
           sx={{
             backgroundImage: 'url(https://source.unsplash.com/random?parking)',
