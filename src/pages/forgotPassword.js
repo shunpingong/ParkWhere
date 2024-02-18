@@ -125,9 +125,10 @@ const ForgotPassword = () => {
               autoComplete="new-password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              sx={{ mt: 2 }}
+              sx={{ mt: 2 , mb:2 }}
             />
             <OtpInput
+              
               containerStyle={{ justifyContent: 'center', marginTop: 2 }}
               inputStyle={{ width: '40px', height: '40px', fontSize: '20px' }}
               value={otp}
@@ -148,13 +149,13 @@ const ForgotPassword = () => {
           </Box>
         </Box>
       </Box>
-      <Box mt={2}>
+      <Box mt={2} align="end">
         <Link onClick={() => navigate('/')} variant="body2">
           Remember your account? Sign in instead
         </Link>
       </Box>
       <Box mt={2}>
-        <Typography variant="body2" color="text.secondary" align='center'>
+        <Typography variant="body2" color="text.secondary" align="center">
           ParkWhere helps you find parking spots hassle-free.
         </Typography>
       </Box>
