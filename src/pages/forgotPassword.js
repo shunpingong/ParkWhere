@@ -3,6 +3,7 @@ import { Container, Box, Typography, CssBaseline, TextField, Button, Link, Avata
 import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
 import KeyIcon from '@mui/icons-material/Key';
+import OtpInput from 'react-otp-input';
 
 function Copyright() {
   return (
@@ -17,8 +18,11 @@ function Copyright() {
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
+  const [otp, setOtp] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   
-  const handleResetPassword = (e) => {
+  const handleSendOTP = (e) => {
     e.preventDefault(); // prevent page from refreshing
     // Send reset password link to user's email
     if (validator.isEmail(email) === false) {
@@ -30,10 +34,24 @@ const ForgotPassword = () => {
     navigate('/'); // navigate to sign in page
   }
 
+  const handleResetPassword = (e) => {
+    e.preventDefault(); // prevent page from refreshing
+    if (validator.isStrongPassword(password) === false) {
+      alert('Password should be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number and one special character.');
+      return;
+    }
+    else if (password !== confirmPassword) {
+      alert('Passwords do not match.');
+      return;
+    }
+    alert('Password reset successfully.');
+    navigate('/'); // navigate to sign in page
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <Box
+      <Box 
         sx={{
           marginTop: 8,
           display: 'flex',
@@ -47,14 +65,14 @@ const ForgotPassword = () => {
         <Typography component="h1" variant="h5">
           Reset Your Password
         </Typography>
-        <Box component="form" noValidate onSubmit={handleResetPassword} sx={{ mt: 2 }}>
+        <Box component="form" noValidate onSubmit={handleSendOTP} sx={{ mt: 2 }}>
           <TextField
             required
             fullWidth
             type="email"
             id="email"
             label="Email Address"
-            helperText="Please enter your email address. We will send you a link to reset your password."
+            helperText="Please enter your email address. We will send you a OTP to reset your password."
             placeholder="test@example.com"
             name="email"
             autoComplete="email"
@@ -69,6 +87,64 @@ const ForgotPassword = () => {
           >
             Send Reset Password Link
           </Button>
+        </Box>
+          <Box 
+              sx={{
+                marginTop: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+          >
+          <Typography component="h1">
+            Input OTP and New Password
+          </Typography>
+          <Box component = "form" noValidate onSubmit = {handleResetPassword} sx = {{ mt: 2 }}>
+            <TextField
+              required
+              fullWidth
+              type="password"
+              id="password"
+              label="New Password"
+              helperText="Please enter your new password."
+              placeholder="Password"
+              name="password"
+              autoComplete="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <TextField
+              required
+              fullWidth
+              type="password"
+              id="confirmPassword"
+              label="Confirm New Password"
+              helperText="Please confirm your new password."
+              placeholder="Password"
+              name="confirmPassword"
+              autoComplete="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          <OtpInput
+            containerStyle={
+              { justifyContent: 'center' }}
+            inputStyle={{ width: '40px', height: '40px', fontSize: '20px' }}
+            value={otp}
+            onChange={setOtp}
+            numInputs={6}
+            renderSeparator={<span>-</span>}
+            renderInput={(props) => <input {...props} />}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained" // contained, outlined, text
+            sx={{ mt: 2, mb: 2 }}
+            >
+            Reset Password
+            </Button>
+          </Box>
           <Link onClick={() => navigate('/')} variant="body2">
             Remember your account? Sign in instead
           </Link>
