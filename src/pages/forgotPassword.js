@@ -83,23 +83,23 @@ const ForgotPassword = () => {
             type="submit"
             fullWidth
             variant="contained" // contained, outlined, text
-            sx={{ mt: 2, mb: 2 }}
+            sx={{ mt: 2 }}
           >
             Send Reset Password Link
           </Button>
         </Box>
-          <Box 
-              sx={{
-                marginTop: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-          >
-          <Typography component="h1">
+        <Box 
+          sx={{
+            marginTop: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography component="h2">
             Input OTP and New Password
           </Typography>
-          <Box component = "form" noValidate onSubmit = {handleResetPassword} sx = {{ mt: 2 }}>
+          <Box component="form" noValidate onSubmit={handleResetPassword} sx={{ mt: 2 }}>
             <TextField
               required
               fullWidth
@@ -109,7 +109,7 @@ const ForgotPassword = () => {
               helperText="Please enter your new password."
               placeholder="Password"
               name="password"
-              autoComplete="password"
+              autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -122,36 +122,39 @@ const ForgotPassword = () => {
               helperText="Please confirm your new password."
               placeholder="Password"
               name="confirmPassword"
-              autoComplete="confirmPassword"
+              autoComplete="new-password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              sx={{ mt: 2 }}
             />
-          <OtpInput
-            containerStyle={
-              { justifyContent: 'center' }}
-            inputStyle={{ width: '40px', height: '40px', fontSize: '20px' }}
-            value={otp}
-            onChange={setOtp}
-            numInputs={6}
-            renderSeparator={<span>-</span>}
-            renderInput={(props) => <input {...props} />}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained" // contained, outlined, text
-            sx={{ mt: 2, mb: 2 }}
+            <OtpInput
+              containerStyle={{ justifyContent: 'center', marginTop: 2 }}
+              inputStyle={{ width: '40px', height: '40px', fontSize: '20px' }}
+              value={otp}
+              onChange={setOtp}
+              numInputs={6}
+              renderSeparator={<span>-</span>}
+              renderInput={(props) => <input {...props} />}
+              sx={{ mt: 2 }}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained" // contained, outlined, text
+              sx={{ mt: 2 }}
             >
-            Reset Password
+              Reset Password
             </Button>
           </Box>
-          <Link onClick={() => navigate('/')} variant="body2">
-            Remember your account? Sign in instead
-          </Link>
         </Box>
       </Box>
-      <Box mt={3}>
-        <Typography variant="body2" color="text.secondary" align="center">
+      <Box mt={2}>
+        <Link onClick={() => navigate('/')} variant="body2">
+          Remember your account? Sign in instead
+        </Link>
+      </Box>
+      <Box mt={2}>
+        <Typography variant="body2" color="text.secondary" align='center'>
           ParkWhere helps you find parking spots hassle-free.
         </Typography>
       </Box>
