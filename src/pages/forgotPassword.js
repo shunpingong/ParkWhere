@@ -6,11 +6,37 @@ import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
+import validator from 'validator';
+
+function Copyright(props) {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {'Copyright © ParkWhere '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
   
+  const handleResetPassword = (e) => {
+    e.preventDefault(); // prevent page from refreshing
+    // Send reset password link to user's email
+    if (validator.isEmail(email) === false) {
+      alert('Invalid email address.');
+      return;
+    }
+    else {
+      // Send reset password link to user's email
+      // ...
+      alert('Reset password link sent to your email.');
+      navigate('/'); // navigate to sign in page
+    }
+  }
+
   return (
     <Container>
       <Box>
@@ -24,10 +50,12 @@ const ForgotPassword = () => {
         }}>
           Reset Your Password
         </Typography>
+        <Box component = "form" noValidate onSubmit = {handleResetPassword} sx = {{ mt: 2 }}>
           <Grid item xs={5}>
             <TextField
                 required
                 fullWidth
+                input type="email"
                 id="email"
                 label="Email Address"
                 helperText ="Please enter your email address. We will send you a link to reset your password."
@@ -41,14 +69,21 @@ const ForgotPassword = () => {
               type = "submit"
               fullWidth
               variant='contained' //contained, outlined, text
-              sx = {{ mt: 3, mb: 2 }}
+              sx = {{ mt: 2, mb: 2 }}
               >Send reset password link
               </Button>
               <Link onClick={() => navigate('/')} variant="body2">
                   Remember your account? Sign in instead
               </Link>
-        </Grid>
+          </Grid>
+        </Box>
       </Box>
+      <Box mt={3}>
+        <Typography variant="body2" color="text.secondary" align="center">
+          ParkWhere helps you find parking spots hassle-free.
+        </Typography>
+      </Box>
+      <Copyright/>
     </Container>
   )
 }

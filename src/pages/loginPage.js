@@ -172,7 +172,7 @@ export default function LoginPage() {
                   </Link>
                 </Grid>
               </Grid>
-              <Box mt={5}>
+              <Box mt={3}>
                 <Typography variant="body2" color="text.secondary" align="center">
                   ParkWhere helps you find parking spots hassle-free.
                 </Typography>

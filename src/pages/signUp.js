@@ -172,7 +172,12 @@ export default function SignUp() {
                         </Grid>
                     </Box>
                 </Box>
-                <Copyright sx={{ mt: 5 }} />
+            <Box mt={3}>
+                <Typography variant="body2" color="text.secondary" align="center">
+                ParkWhere helps you find parking spots hassle-free.
+                </Typography>
+            </Box>
+            <Copyright/>
             </Container>
         </ThemeProvider>
     );
