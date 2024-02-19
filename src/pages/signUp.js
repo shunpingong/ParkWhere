@@ -102,6 +102,7 @@ export default function SignUp() {
                                     fullWidth
                                     name="name"
                                     label="Full Name"
+                                    helperText="Please enter your full name"
                                     placeholder='Lim Bo Seng'
                                     type="text"
                                     id="name"
@@ -131,6 +132,7 @@ export default function SignUp() {
                                     fullWidth
                                     id="email"
                                     label="Email Address"
+                                    helperText="Please enter your email address"
                                     placeholder='test@example.com'
                                     name="email"
                                     autoComplete="email"
@@ -146,13 +148,14 @@ export default function SignUp() {
                                     label="Password"
                                     type="password"
                                     id="password"
+                                    helperText = "Please enter your password"
                                     autoComplete="new-password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
                             </Grid>
                         </Grid>
-                        <Box mt={2} mb={1}>
+                        <Box mt={1}>
                             <Typography variant="body2" color="error">
                                 {errorMessage}
                             </Typography>
