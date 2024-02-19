@@ -161,11 +161,11 @@ export default function SignUp() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{ mt: 2, mb: 2 }}
                         >
                             Sign Up
                         </Button>
-                        <Grid container justifyContent="flex-end">
+                        <Grid container justifyContent="flex-start">
                             <Grid item>
                                 <Link onClick={() => navigate('/')} variant="body2">
                                     Already have an account? Sign in

@@ -141,7 +141,7 @@ const ForgotPassword = () => {
               type="submit"
               fullWidth
               variant="contained" // contained, outlined, text
-              sx={{ mt: 2 }}
+              sx={{ mt: 3 }}
             >
               Reset Password
             </Button>
