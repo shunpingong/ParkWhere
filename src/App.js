@@ -6,6 +6,7 @@ import ForgotPassword from './pages/forgotPassword';
 import SignUp from './pages/signUp';
 import HomePage from './pages/homePage';
 import NotFound from './pages/notFound';
+import API from './pages/API';
 
 function App() {
 
@@ -17,8 +18,10 @@ function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/homePage" element={<HomePage />} />
         <Route path='*' element={<NotFound />}/>
+        <Route path='/API' element={<API/>} />
       </Routes>
     </BrowserRouter>
+    
   )
 }
 
