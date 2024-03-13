@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
 import KeyIcon from '@mui/icons-material/Key';
 import OtpInput from 'react-otp-input';
+import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
 
 function Copyright() {
   return (
@@ -22,31 +23,48 @@ const ForgotPassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   
-  const handleSendOTP = (e) => {
-    e.preventDefault(); // prevent page from refreshing
+  const handleSubmit = async(e) => {
+    e.preventDefault();
     // Send reset password link to user's email
     if (validator.isEmail(email) === false) {
       alert('Invalid email address.');
       return;
     }
-    // Here you can call your API to send the reset password link to the email
-    alert('Reset password link sent to your email.');
-    navigate('/'); // navigate to sign in page
+    const emalVal = e.target.email.value;
+    const auth = getAuth(); // Declare the auth variable
+    sendPasswordResetEmail(auth, emalVal).then(() => { // Add a comma after the closing parenthesis
+      alert('Reset password link sent to your email.');
+      navigate('/'); // navigate to sign in page
+    }).catch((error) => {
+      alert(error.message);
+    });
   }
 
-  const handleResetPassword = (e) => {
-    e.preventDefault(); // prevent page from refreshing
-    if (validator.isStrongPassword(password) === false) {
-      alert('Password should be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number and one special character.');
-      return;
-    }
-    else if (password !== confirmPassword) {
-      alert('Passwords do not match.');
-      return;
-    }
-    alert('Password reset successfully.');
-    navigate('/'); // navigate to sign in page
-  }
+  // const handleSendOTP = (e) => {
+  //   e.preventDefault(); // prevent page from refreshing
+  //   // Send reset password link to user's email
+  //   if (validator.isEmail(email) === false) {
+  //     alert('Invalid email address.');
+  //     return;
+  //   }
+  //   // Here you can call your API to send the reset password link to the email
+  //   alert('Reset password link sent to your email.');
+  //   navigate('/'); // navigate to sign in page
+  // }
+
+  // const handleResetPassword = (e) => {
+  //   e.preventDefault(); // prevent page from refreshing
+  //   if (validator.isStrongPassword(password) === false) {
+  //     alert('Password should be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number and one special character.');
+  //     return;
+  //   }
+  //   else if (password !== confirmPassword) {
+  //     alert('Passwords do not match.');
+  //     return;
+  //   }
+  //   alert('Password reset successfully.');
+  //   navigate('/'); // navigate to sign in page
+  // }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -65,7 +83,7 @@ const ForgotPassword = () => {
         <Typography component="h1" variant="h5">
           Reset Your Password
         </Typography>
-        <Box component="form" noValidate onSubmit={handleSendOTP} sx={{ mt: 2 }}>
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 2 }}>
           <TextField
             required
             fullWidth
@@ -88,7 +106,7 @@ const ForgotPassword = () => {
             Send Reset Password Link
           </Button>
         </Box>
-        <Box 
+        {/* <Box 
           sx={{
             marginTop: 2,
             display: 'flex',
@@ -128,7 +146,6 @@ const ForgotPassword = () => {
               sx={{ mt: 2 , mb:2 }}
             />
             <OtpInput
-              
               containerStyle={{ justifyContent: 'center', marginTop: 2 }}
               inputStyle={{ width: '40px', height: '40px', fontSize: '20px' }}
               value={otp}
@@ -146,8 +163,8 @@ const ForgotPassword = () => {
             >
               Reset Password
             </Button>
-          </Box>
-        </Box>
+          </Box> */}
+        {/* </Box> */}
       </Box>
       <Box mt={2} align="end">
         <Link onClick={() => navigate('/')} variant="body2">

@@ -140,7 +140,7 @@ export default function LoginPage() {
                 id="password"
                 autoComplete="current-password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)} // e.target.value is the value of the input field
               />
               
               <Typography color="error">{errorMessage}</Typography>
