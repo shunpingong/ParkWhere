@@ -1,10 +1,13 @@
 import React from 'react';
 import { GoogleMap, useLoadScript, Marker , Autocomplete} from '@react-google-maps/api';
+import Searchbar from './Searchbar';
 
 const mapContainerStyle = {
-  width: '100%',
-  height: '100vh',
+  width: '80%',
+  height: '80vh',
+  margin: 'auto',
 };
+
 const center = {
   lat: 1.3443944759713704, // default latitude
   lng: 103.68037761231732, // default longitude
@@ -25,7 +28,7 @@ const Gmap = () => {
   }
 
   return (
-    <div>
+    <div >
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         zoom={16}
@@ -38,6 +41,7 @@ const Gmap = () => {
         }
         mapTypeId = 'roadmap'
       >
+        <Searchbar />
         <Marker position={center} draggable ={true}/>
       </GoogleMap>
     </div>
