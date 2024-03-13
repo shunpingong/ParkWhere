@@ -62,6 +62,12 @@ export default function LoginPage() {
     });
   };
 
+  const HandleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      HandleSignIn(e);
+    }
+  };
+
   const navigate = useNavigate();
 
   const signInWithGoogle = async () => {
@@ -117,7 +123,7 @@ export default function LoginPage() {
             <Typography component="h1" variant="h5">
               Sign in to ParkWhere
             </Typography>
-            <Box component="form" noValidate onSubmit={HandleSignIn} sx={{ mt: 1 }}>
+            <Box component="form" noValidate onSubmit={HandleSignIn} onKeyDown = {HandleKeyDown} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
