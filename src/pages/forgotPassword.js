@@ -90,7 +90,7 @@ const ForgotPassword = () => {
             type="email"
             id="email"
             label="Email Address"
-            helperText="Please enter your email address. We will send you a OTP to reset your password."
+            helperText="Please enter your email address. We will send you a link to reset your password."
             placeholder="test@example.com"
             name="email"
             autoComplete="email"

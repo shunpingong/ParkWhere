@@ -173,12 +173,12 @@ export default function LoginPage() {
               
               <Grid container spacing={1}>  
                 <Grid item xs>
-                  <Link variant="body2" onClick={() => navigate("/forgot-password")}>
+                  <Link variant="body2" onClick={() => navigate("forgotpassword")}>
                     Forgot password?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link variant="body2" onClick={() => navigate("/sign-up")}>
+                  <Link variant="body2" onClick={() => navigate("/signup")}>
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
