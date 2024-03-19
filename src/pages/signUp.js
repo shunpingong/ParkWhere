@@ -200,14 +200,14 @@ export default function SignUp() {
                 </Link>
               </Grid>
             </Grid>
+            <Box mt={1}>
+              <Typography variant="body2" color="text.secondary" align="center">
+                ParkWhere helps you find parking spots hassle-free.
+              </Typography>
+            </Box>
+            <Copyright />
           </Box>
         </Box>
-        <Box mt={3}>
-          <Typography variant="body2" color="text.secondary" align="center">
-            ParkWhere helps you find parking spots hassle-free.
-          </Typography>
-        </Box>
-        <Copyright />
       </Container>
     </ThemeProvider>
   );

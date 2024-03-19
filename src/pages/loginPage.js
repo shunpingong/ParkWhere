@@ -32,13 +32,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  useEffect(() => {
-    if (!auth.currentUser) {
-      // No authenticated user, redirect to login page
-      navigate("/");
-    }
-  });
-
   const HandleSignIn = (e) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
