@@ -16,4 +16,4 @@
 
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-[Deployed on <link>](https://park-where-fy34.vercel.app/)
+[Deployed on <https://park-where-fy34.vercel.app/>](https://park-where-fy34.vercel.app/)
