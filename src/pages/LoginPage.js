@@ -31,6 +31,19 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const HandleSignIn = (e) => {
     e.preventDefault();
@@ -106,6 +119,7 @@ export default function LoginPage() {
           backgroundPosition: "center",
           height: "100vh",
         }}
+        maxWidth="xxl"
       >
         <Box
           sx={{
@@ -126,7 +140,7 @@ export default function LoginPage() {
             onSubmit={HandleSignIn}
             onKeyDown={HandleKeyDown}
             sx={{ mt: 1 }}
-            width={450}
+            width={300}
           >
             <TextField
               margin="normal"
@@ -134,6 +148,7 @@ export default function LoginPage() {
               fullWidth
               id="email"
               label="Email Address"
+              // helperText="Enter your email address registered with ParkWhere."
               name="email"
               autoComplete="email"
               autoFocus

@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
@@ -100,6 +99,7 @@ export default function SignUp() {
           backgroundPosition: "center",
           height: "100vh",
         }}
+        maxWidth="xxl"
       >
         <Box
           sx={{
@@ -123,42 +123,43 @@ export default function SignUp() {
             component="form"
             noValidate
             onSubmit={handleSignUp}
-            sx={{ mt: 1 }}
-            width={450}
+            sx={{ mt: 2 }}
+            width={300}
           >
             <TextField
               margin="normal"
               required
               fullWidth
-              name="name"
-              label="Full Name"
-              helperText="Please enter your full name"
-              placeholder="Lim Bo Seng"
-              type="text"
               id="name"
+              label="Full Name"
+              placeholder="John Doe"
+              autoFocus
+              // helperText="Enter your email address registered with ParkWhere."
+              name="name"
               autoComplete="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
             <TextField
+              margin="normal"
               required
               fullWidth
               name="tel"
               label="Phone Number"
               placeholder="+65xxxxxxxx"
-              helperText="Please enter your phone number in the format +65xxxxxxxx"
               type="tel"
               id="tel"
               autoComplete="tel"
               value={tel}
-              onChange={(e) => setTel(e.target.value)}
+              onChange={(e) => setTel(e.target.value)} // e.target.value is the value of the input field
             />
             <TextField
+              margin="normal"
               required
               fullWidth
               id="email"
               label="Email Address"
-              helperText="Please enter your email address"
+              // helperText="Enter your email address registered with ParkWhere."
               placeholder="test@example.com"
               name="email"
               autoComplete="email"
@@ -166,13 +167,13 @@ export default function SignUp() {
               onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
+              margin="normal"
               required
               fullWidth
               name="password"
               label="Password"
               type="password"
               id="password"
-              helperText="Please enter your password"
               autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -193,13 +194,11 @@ export default function SignUp() {
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-start">
-              <Grid item>
-                <Link onClick={() => navigate("/")} variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
+            <Box align="end">
+              <Link variant="body2" onClick={() => navigate("/")}>
+                {"Remember your account? Sign in instead"}
+              </Link>
+            </Box>
             <Box mt={1}>
               <Typography variant="body2" color="text.secondary" align="center">
                 ParkWhere helps you find parking spots hassle-free.
