@@ -1,89 +1,96 @@
-import React, { useState } from 'react';
-import { Container, Box, Typography, CssBaseline, TextField, Button, Link, Avatar } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import validator from 'validator';
-import KeyIcon from '@mui/icons-material/Key';
-import OtpInput from 'react-otp-input';
-import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
+import React, { useState } from "react";
+import {
+  Container,
+  Box,
+  Typography,
+  CssBaseline,
+  TextField,
+  Button,
+  Link,
+  Avatar,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import validator from "validator";
+import KeyIcon from "@mui/icons-material/Key";
+import { sendPasswordResetEmail, getAuth } from "firebase/auth";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © ParkWhere '}
+      {"Copyright © ParkWhere "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const navigate = useNavigate();
-  const [otp, setOtp] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  
-  const handleSubmit = async(e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Send reset password link to user's email
     if (validator.isEmail(email) === false) {
-      alert('Invalid email address.');
+      alert("Invalid email address.");
       return;
     }
     const emalVal = e.target.email.value;
     const auth = getAuth(); // Declare the auth variable
-    sendPasswordResetEmail(auth, emalVal).then(() => { // Add a comma after the closing parenthesis
-      alert('Reset password link sent to your email.');
-      navigate('/'); // navigate to sign in page
-    }).catch((error) => {
-      alert(error.message);
-    });
-  }
-
-  // const handleSendOTP = (e) => {
-  //   e.preventDefault(); // prevent page from refreshing
-  //   // Send reset password link to user's email
-  //   if (validator.isEmail(email) === false) {
-  //     alert('Invalid email address.');
-  //     return;
-  //   }
-  //   // Here you can call your API to send the reset password link to the email
-  //   alert('Reset password link sent to your email.');
-  //   navigate('/'); // navigate to sign in page
-  // }
-
-  // const handleResetPassword = (e) => {
-  //   e.preventDefault(); // prevent page from refreshing
-  //   if (validator.isStrongPassword(password) === false) {
-  //     alert('Password should be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number and one special character.');
-  //     return;
-  //   }
-  //   else if (password !== confirmPassword) {
-  //     alert('Passwords do not match.');
-  //     return;
-  //   }
-  //   alert('Password reset successfully.');
-  //   navigate('/'); // navigate to sign in page
-  // }
+    sendPasswordResetEmail(auth, emalVal)
+      .then(() => {
+        // Add a comma after the closing parenthesis
+        alert("Reset password link sent to your email.");
+        navigate("/"); // navigate to sign in page
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container
+      component="main"
+      sx={{
+        justifyContent: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        backgroundImage: "url(https://source.unsplash.com/random?parking)",
+        backgroundRepeat: "no-repeat",
+        backgroundColor: (t) =>
+          t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: "100vh",
+      }}
+    >
       <CssBaseline />
-      <Box 
+      <Box
         sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          backgroundColor: "white",
+          justifyContent: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "30px",
+          borderRadius: "20px",
+          opacity: "0.9",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <KeyIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Reset Your Password
         </Typography>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 2 }}>
+        <Box
+          component="form"
+          noValidate
+          onSubmit={handleSubmit}
+          sx={{ mt: 2 }}
+          width={450}
+        >
           <TextField
             required
             fullWidth
@@ -106,79 +113,20 @@ const ForgotPassword = () => {
             Send Reset Password Link
           </Button>
         </Box>
-        {/* <Box 
-          sx={{
-            marginTop: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Typography component="h2">
-            Input OTP and New Password
+        <Box mt={2} align="end">
+          <Link onClick={() => navigate("/")} variant="body2">
+            Remember your account? Sign in instead
+          </Link>
+        </Box>
+        <Box mt={2}>
+          <Typography variant="body2" color="text.secondary" align="center">
+            ParkWhere helps you find parking spots hassle-free.
           </Typography>
-          <Box component="form" noValidate onSubmit={handleResetPassword} sx={{ mt: 2 }}>
-            <TextField
-              required
-              fullWidth
-              type="password"
-              id="password"
-              label="New Password"
-              helperText="Please enter your new password."
-              placeholder="Password"
-              name="password"
-              autoComplete="new-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <TextField
-              required
-              fullWidth
-              type="password"
-              id="confirmPassword"
-              label="Confirm New Password"
-              helperText="Please confirm your new password."
-              placeholder="Password"
-              name="confirmPassword"
-              autoComplete="new-password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              sx={{ mt: 2 , mb:2 }}
-            />
-            <OtpInput
-              containerStyle={{ justifyContent: 'center', marginTop: 2 }}
-              inputStyle={{ width: '40px', height: '40px', fontSize: '20px' }}
-              value={otp}
-              onChange={setOtp}
-              numInputs={6}
-              renderSeparator={<span>-</span>}
-              renderInput={(props) => <input {...props} />}
-              sx={{ mt: 2 }}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained" // contained, outlined, text
-              sx={{ mt: 3 }}
-            >
-              Reset Password
-            </Button>
-          </Box> */}
-        {/* </Box> */}
+          <Copyright />
+        </Box>
       </Box>
-      <Box mt={2} align="end">
-        <Link onClick={() => navigate('/')} variant="body2">
-          Remember your account? Sign in instead
-        </Link>
-      </Box>
-      <Box mt={2}>
-        <Typography variant="body2" color="text.secondary" align="center">
-          ParkWhere helps you find parking spots hassle-free.
-        </Typography>
-      </Box>
-      <Copyright />
     </Container>
   );
-}
+};
 
 export default ForgotPassword;

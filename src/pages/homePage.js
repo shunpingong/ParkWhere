@@ -43,9 +43,15 @@ export default function HomePage() {
                 <img src={localStorage.getItem("profilePic")} alt="Profile Picture" />
             </Location>
             <Gmap />
-            <Button onClick={handleLogout}>
-                Logout
-            </Button>
-        </Box>
+                <Button onClick={() => navigate('/changepassword')}>
+                    Change Password
+                </Button>
+                <Button onClick={() => navigate('/editname')}>
+                    Edit Name
+                </Button>
+                <Button onClick={handleLogout}>
+                    Logout
+                </Button>
+            </Box>
     );
 }

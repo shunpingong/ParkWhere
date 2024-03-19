@@ -1,5 +1,5 @@
 import React from 'react';
-import { GoogleMap, useLoadScript, Marker , Autocomplete} from '@react-google-maps/api';
+import { GoogleMap, useLoadScript, MarkerF , Autocomplete} from '@react-google-maps/api';
 import Searchbar from './Searchbar';
 
 const mapContainerStyle = {
@@ -42,7 +42,7 @@ const Gmap = () => {
         mapTypeId = 'roadmap'
       >
         <Searchbar />
-        <Marker position={center} draggable ={true}/>
+        <MarkerF position={center} draggable ={true}/>
       </GoogleMap>
     </div>
   );

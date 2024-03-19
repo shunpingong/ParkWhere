@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 const Location = ({ children }) => {
   const [latitude, setLatitude] = useState(null);
@@ -6,7 +6,7 @@ const Location = ({ children }) => {
 
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(position => {
+      navigator.geolocation.watchPosition((position) => {
         const { latitude, longitude } = position.coords;
         setLatitude(latitude);
         setLongitude(longitude);
@@ -20,13 +20,14 @@ const Location = ({ children }) => {
     <div>
       {latitude && longitude && (
         <div>
-          Latitude: {latitude}<br />
+          Latitude: {latitude}
+          <br />
           Longitude: {longitude}
         </div>
       )}
       {children} {/* Render children regardless of geolocation availability */}
     </div>
   );
-}
+};
 
 export default Location;
