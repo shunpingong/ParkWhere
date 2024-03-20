@@ -113,23 +113,28 @@ const ForgotPassword = () => {
             <Button
               type="submit"
               fullWidth
-              variant="contained" // contained, outlined, text
-              sx={{ mt: 2 }}
+              variant="contained"
+              sx={{
+                mt: 1,
+                mb: 1,
+                backgroundColor: "primary.main",
+                "&:hover": { backgroundColor: "primary.dark" },
+              }}
             >
               Send Reset Password Link
             </Button>
+            <Box align="end">
+              <Link variant="body2" onClick={() => navigate("/")}>
+                {"Remember your account? Sign in instead"}
+              </Link>
+            </Box>
+            <Box mt={1}>
+              <Typography variant="body2" color="text.secondary" align="center">
+                ParkWhere helps you find parking spots hassle-free.
+              </Typography>
+            </Box>
+            <Copyright />
           </Box>
-          <Box align="end">
-            <Link variant="body2" onClick={() => navigate("/")}>
-              {"Remember your account? Sign in instead"}
-            </Link>
-          </Box>
-          <Box mt={1}>
-            <Typography variant="body2" color="text.secondary" align="center">
-              ParkWhere helps you find parking spots hassle-free.
-            </Typography>
-          </Box>
-          <Copyright />
         </Box>
       </Container>
     </ThemeProvider>
