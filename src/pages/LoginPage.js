@@ -32,6 +32,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [width, setWidth] = useState(window.innerWidth);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -76,8 +77,6 @@ export default function LoginPage() {
       HandleSignIn(e);
     }
   };
-
-  const navigate = useNavigate();
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();

@@ -1,64 +1,104 @@
-import React, { useState } from 'react';
-import { Container, Box, Typography, CssBaseline, TextField, Button, Link, Avatar, Grid, CircularProgress } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { getAuth, updateProfile } from 'firebase/auth';
-import KeyIcon from '@mui/icons-material/Key';
-
+import React, { useState } from "react";
+import {
+  Container,
+  Box,
+  Typography,
+  CssBaseline,
+  TextField,
+  Button,
+  Link,
+  Avatar,
+  Grid,
+  CircularProgress,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { getAuth, updateProfile } from "firebase/auth";
+import { useEffect } from "react";
+import KeyIcon from "@mui/icons-material/Key";
 
 function Copyright() {
-    return (
-      <Typography variant="body2" color="text.secondary" align="center">
-        {'Copyright © ParkWhere '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-  }
+  return (
+    <Typography variant="body2" color="text.secondary" align="center">
+      {"Copyright © ParkWhere "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
 
 const EditName = () => {
   const navigate = useNavigate();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [loading, setLoading] = useState(false);
 
   const auth = getAuth();
   const currentUser = auth.currentUser;
+
+  useEffect(() => {
+    if (!auth.currentUser) {
+      // No authenticated user, redirect to login page
+      navigate("/");
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       await updateProfile(currentUser, {
-        displayName: `${firstName} ${lastName}`
+        displayName: `${firstName} ${lastName}`,
       });
       console.log(currentUser.displayName);
-      navigate('/homepage');
+      navigate("/homepage");
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
       // Handle error
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container
+      component="main"
+      maxWidth="xxl"
+      sx={{
+        justifyContent: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        height: "100vh",
+        backgroundColor: "grey",
+      }}
+    >
       <CssBaseline />
+
       <Box
         sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          backgroundColor: "white",
+          justifyContent: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "30px",
+          borderRadius: "20px",
+          opacity: "0.9",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <KeyIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Edit Your Name
         </Typography>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+        <Box
+          component="form"
+          noValidate
+          onSubmit={handleSubmit}
+          sx={{ mt: 2 }}
+          width={300}
+        >
           <TextField
             margin="normal"
             required
@@ -89,22 +129,20 @@ const EditName = () => {
             disabled={loading || !(firstName && lastName)}
             sx={{ mt: 3, mb: 2 }}
           >
-            {loading ? <CircularProgress size={24} /> : 'Save'}
+            {loading ? <CircularProgress size={24} /> : "Save"}
           </Button>
           <Button
             fullWidth
             variant="outlined"
-            onClick={() => navigate('/homepage')}
+            onClick={() => navigate("/userprofile")}
           >
             Cancel
           </Button>
         </Box>
-      </Box>
-      <Box mt={2}>
-      <Copyright />
+        {/* <Copyright /> */}
       </Box>
     </Container>
   );
-}
+};
 
 export default EditName;
