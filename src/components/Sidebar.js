@@ -1,91 +1,129 @@
+import { useRef, useState } from "react";
+import "./styles.css";
 
-import React, { useState } from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import * as FaIcons from "react-icons/fa";
-import * as AiIcons from "react-icons/ai";
-import { SidebarData } from "./SidebarData";
-import SubMenu from "./SubMenu";
-import { IconContext } from "react-icons/lib";
- 
-const Nav = styled.div`
-    background: #15171c;
-    height: 80px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-`;
- 
-const NavIcon = styled(Link)`
-    margin-left: 2rem;
-    font-size: 2rem;
-    height: 80px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-`;
- 
-const SidebarNav = styled.nav`
-    background: #15171c;
-    width: 250px;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    left: ${({ sidebar }) => (sidebar ? "0" : "-100%")};
-    transition: 350ms;
-    z-index: 10;
-`;
- 
-const SidebarWrap = styled.div`
-    width: 100%;
-`;
- 
-const Sidebar = () => {
-    const [sidebar, setSidebar] = useState(false);
- 
-    const showSidebar = () => setSidebar(!sidebar);
- 
-    return (
-        <>
-            <IconContext.Provider value={{ color: "#fff" }}>
-                <Nav>
-                    <NavIcon to="#">
-                        <FaIcons.FaBars
-                            onClick={showSidebar}
-                        />
-                    </NavIcon>
-                    <h1
-                        style={{
-                            textAlign: "center",
-                            marginLeft: "200px",
-                            color: "green",
-                        }}
-                    >
-                        GeeksforGeeks
-                    </h1>
-                </Nav>
-                <SidebarNav sidebar={sidebar}>
-                    <SidebarWrap>
-                        <NavIcon to="#">
-                            <AiIcons.AiOutlineClose
-                                onClick={showSidebar}
-                            />
-                        </NavIcon>
-                        {SidebarData.map((item, index) => {
-                            return (
-                                <SubMenu
-                                    item={item}
-                                    key={index}
-                                />
-                            );
-                        })}
-                    </SidebarWrap>
-                </SidebarNav>
-            </IconContext.Provider>
-        </>
-    );
+const menuItems = [
+  {
+    name: "Home",
+    icon: "home",
+  },
+  {
+    name: "Settings",
+    icon: "settings",
+    items: ["Display", "Editor", "Theme", "Interface"],
+  },
+  {
+    name: "Create",
+    icon: "add_box",
+    items: ["Article", "Document", "Report"],
+  },
+  {
+    name: "Account",
+    icon: "lock",
+    items: ["Dashboard", "Logout"],
+  },
+  {
+    name: "Products",
+    icon: "inventory_2",
+  },
+  {
+    name: "Favourites",
+    icon: "favorite",
+  },
+];
+
+const Icon = ({ icon }) => (
+  <span className="material-symbols-outlined">{icon}</span>
+);
+
+const NavHeader = () => (
+  <header className="sidebar-header">
+    <button type="button">
+      <Icon icon="menu" />
+    </button>
+    <span>Admin</span>
+  </header>
+);
+
+const NavButton = ({ onClick, name, icon, isActive, hasSubNav }) => (
+  <button
+    type="button"
+    onClick={() => onClick(name)}
+    className={isActive ? "active" : ""}
+  >
+    {icon && <Icon icon={icon} />}
+    <span>{name}</span>
+    {hasSubNav && <Icon icon="expand_more" />}
+  </button>
+);
+
+const SubMenu = ({ item, activeItem, handleClick }) => {
+  const navRef = useRef(null);
+
+  const isSubNavOpen = (item, items) =>
+    items.some((i) => i === activeItem) || item === activeItem;
+
+  return (
+    <div
+      className={`sub-nav ${isSubNavOpen(item.name, item.items) ? "open" : ""}`}
+      style={{
+        height: !isSubNavOpen(item.name, item.items)
+          ? 0
+          : navRef.current?.clientHeight,
+      }}
+    >
+      <div ref={navRef} className="sub-nav-inner">
+        {item?.items.map((subItem) => (
+          <NavButton
+            onClick={handleClick}
+            name={subItem}
+            isActive={activeItem === subItem}
+          />
+        ))}
+      </div>
+    </div>
+  );
 };
- 
-export default Sidebar;
+
+export default function Sidebar() {
+  const [activeItem, setActiveItem] = useState("");
+
+  const handleClick = (item) => {
+    console.log("activeItem", activeItem);
+    setActiveItem(item !== activeItem ? item : "");
+  };
+
+  return (
+    <aside className="sidebar">
+      <NavHeader />
+      {menuItems.map((item) => (
+        <div>
+          {!item.items && (
+            <NavButton
+              onClick={handleClick}
+              name={item.name}
+              icon={item.icon}
+              isActive={activeItem === item.name}
+              hasSubNav={!!item.items}
+            />
+          )}
+          {item.items && (
+            <>
+              <NavButton
+                onClick={handleClick}
+                name={item.name}
+                icon={item.icon}
+                isActive={activeItem === item.name}
+                hasSubNav={!!item.items}
+              />
+              <SubMenu
+                activeItem={activeItem}
+                handleClick={handleClick}
+                item={item}
+              />
+            </>
+          )}
+        </div>
+      ))}
+    </aside>
+  );
+}

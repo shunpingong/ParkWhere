@@ -8,6 +8,8 @@ import {
 import Searchbar from "./Searchbar";
 import { useEffect, useState } from "react";
 
+import SVY21 from "../components/svy21";
+
 const mapContainerStyle = {
   width: "80%",
   height: "80vh",
@@ -18,16 +20,25 @@ const Gmap = () => {
   const [latitude, setLatitude] = useState(1.3443944759713704);
   const [longitude, setLongitude] = useState(103.68037761231732);
 
+  var svy21Converter = new SVY21();
+
+  const [svy21N, setsvy21N] = useState(30381.1007417506); // Northing in SVY21
+  const [svy21E, setsvy21E] = useState(32195.1006872542); // Easting in SVY21
+
+  var latLonCoordinates = svy21Converter.computeLatLon(svy21N, svy21E);
+
+  console.log(
+    "Latitude and Longitude:",
+    latLonCoordinates.lat,
+    latLonCoordinates.lon
+  );
+
   var carparkList = [
     { lat: 1.3443944759713704, lng: 103.68037761231732 },
     { lat: 1.3369344, lng: 103.743488 },
   ];
 
   var favorite = [{ lat: 1.3443944759713704, lng: 103.68037761231732 }];
-
-  // console.log(favorite.some(carparkList[0]));
-  // console.log(carparkList[0]);
-  // console.log(favorite);
 
   var center = {
     lat: latitude,
@@ -68,10 +79,19 @@ const Gmap = () => {
         options={{
           scrollwheel: true,
           mapTypeControl: false,
+          zoomControl: true,
+          streetViewControl: true,
         }}
         mapTypeId="roadmap"
       >
         <Searchbar />
+
+        <MarkerF
+          position={{ lat: latLonCoordinates.lat, lng: latLonCoordinates.lon }}
+          options={{
+            icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/parking_lot_maps.png",
+          }}
+        />
         <MarkerF
           position={center}
           // draggable={true}

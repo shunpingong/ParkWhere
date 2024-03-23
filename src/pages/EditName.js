@@ -6,9 +6,7 @@ import {
   CssBaseline,
   TextField,
   Button,
-  Link,
   Avatar,
-  Grid,
   CircularProgress,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -16,15 +14,15 @@ import { getAuth, updateProfile } from "firebase/auth";
 import { useEffect } from "react";
 import KeyIcon from "@mui/icons-material/Key";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {"Copyright © ParkWhere "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+// function Copyright() {
+//   return (
+//     <Typography variant="body2" color="text.secondary" align="center">
+//       {"Copyright © ParkWhere "}
+//       {new Date().getFullYear()}
+//       {"."}
+//     </Typography>
+//   );
+// }
 
 const EditName = () => {
   const navigate = useNavigate();
@@ -40,7 +38,7 @@ const EditName = () => {
       // No authenticated user, redirect to login page
       navigate("/");
     }
-  }, [navigate]);
+  }, [auth.currentUser, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,7 +48,7 @@ const EditName = () => {
         displayName: `${firstName} ${lastName}`,
       });
       console.log(currentUser.displayName);
-      navigate("/homepage");
+      navigate("/userprofile");
     } catch (error) {
       console.error("Error updating profile:", error);
       // Handle error

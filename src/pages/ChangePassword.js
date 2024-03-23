@@ -6,25 +6,28 @@ import {
   CssBaseline,
   TextField,
   Button,
-  Link,
   Avatar,
-  Grid,
   CircularProgress,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { getAuth } from "firebase/auth";
+import {
+  getAuth,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from "firebase/auth";
 import KeyIcon from "@mui/icons-material/Key";
 import { useEffect } from "react";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {"Copyright © ParkWhere "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+// function Copyright() {
+//   return (
+//     <Typography variant="body2" color="text.secondary" align="center">
+//       {"Copyright © ParkWhere "}
+//       {new Date().getFullYear()}
+//       {"."}
+//     </Typography>
+//   );
+// }
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -34,24 +37,48 @@ const ChangePassword = () => {
   const [loading, setLoading] = useState(false);
 
   const auth = getAuth();
-  const currentUser = auth.currentUser;
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    if (newPassword !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-    // Handle password change logic
-  };
 
   useEffect(() => {
     if (!auth.currentUser) {
       // No authenticated user, redirect to login page
       navigate("/");
     }
-  }, [navigate]);
+  }, [auth.currentUser, navigate]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    if (newPassword !== confirmPassword) {
+      alert("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+    setLoading(false);
+    const credential = EmailAuthProvider.credential(
+      auth.currentUser.email,
+      currentPassword
+    );
+
+    try {
+      await reauthenticateWithCredential(auth.currentUser, credential);
+    } catch (error) {
+      alert(error.message);
+      setLoading(false);
+      return;
+    }
+
+    await updatePassword(auth.currentUser, newPassword)
+      .then(() => {
+        setLoading(false);
+        alert("Password updated successfully");
+        navigate("/userprofile");
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.error("Error updating password:", error);
+        alert("Error updating password");
+      });
+  };
 
   return (
     <Container
