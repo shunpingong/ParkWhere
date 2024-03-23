@@ -12,7 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { getAuth, updateProfile } from "firebase/auth";
 import { useEffect } from "react";
-import KeyIcon from "@mui/icons-material/Key";
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 
 // function Copyright() {
 //   return (
@@ -84,8 +84,8 @@ const EditName = () => {
           opacity: "0.9",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <KeyIcon />
+        <Avatar sx={{ m: 1, bgcolor: "grey" }}>
+          <DriveFileRenameOutlineIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Edit Your Name

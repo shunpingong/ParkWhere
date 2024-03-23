@@ -16,7 +16,7 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from "firebase/auth";
-import KeyIcon from "@mui/icons-material/Key";
+import LockIcon from "@mui/icons-material/Lock";
 import { useEffect } from "react";
 
 // function Copyright() {
@@ -106,8 +106,8 @@ const ChangePassword = () => {
           opacity: "0.9",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <KeyIcon />
+        <Avatar sx={{ m: 1, bgcolor: "grey" }}>
+          <LockIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Change Your Password
