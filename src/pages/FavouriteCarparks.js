@@ -199,7 +199,7 @@ export default function FavouriteCarparks() {
           <Avatar sx={{ m: 1, bgcolor: "grey" }}>
             <FavoriteIcon fontSize="medium" />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography sx={{ mb: 2 }} component="h1" variant="h5">
             Favourite Carparks
           </Typography>
           <Grid container spacing={2} width={300}>
@@ -209,6 +209,9 @@ export default function FavouriteCarparks() {
               </Grid>
             ))}
           </Grid>
+          <Typography sx={{ mt: 1 }}>
+            Page {currentPage} of {totalPages}
+          </Typography>
           <Button disabled={currentPage === totalPages} onClick={nextPage}>
             Next
           </Button>
