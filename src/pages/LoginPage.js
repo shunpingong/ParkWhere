@@ -8,43 +8,25 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../backend/firebase";
 import { GoogleButton } from "react-google-button";
 import Container from "@mui/material/Container";
 import logo from "../assets/logo.png";
+import Copyright from "../components/Copyright";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {"Copyright © ParkWhere "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
-const defaultTheme = createTheme();
-
+/**
+ * A component for displaying login page UI.
+ * @component
+ * @returns {JSX.Element} Login Page UI.
+ */
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [width, setWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const defaultTheme = createTheme();
 
   const HandleSignIn = (e) => {
     e.preventDefault();

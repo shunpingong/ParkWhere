@@ -14,25 +14,20 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../backend/firebase";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
+import Copyright from "../components/Copyright";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {"Copyright © ParkWhere "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
-const defaultTheme = createTheme();
-
+/**
+ * A component for displaying sign up UI.
+ * @component
+ * @returns {JSX.Element} Sign Up UI.
+ */
 export default function SignUp() {
   const [errorMessage, setErrorMessage] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [tel, setTel] = useState("");
+  const defaultTheme = createTheme();
 
   const navigate = useNavigate();
 

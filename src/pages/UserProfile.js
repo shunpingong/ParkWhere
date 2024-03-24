@@ -12,9 +12,14 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Paper from "@mui/material/Paper";
 
-const defaultTheme = createTheme();
+/**
+ * A component for displaying user profile UI.
+ * @component
+ * @returns {JSX.Element} User Profile UI.
+ */
 export default function UserProfile() {
   const navigate = useNavigate();
+  const defaultTheme = createTheme();
 
   useEffect(() => {
     if (!auth.currentUser) {

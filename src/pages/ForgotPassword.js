@@ -14,17 +14,13 @@ import validator from "validator";
 import KeyIcon from "@mui/icons-material/Key";
 import { sendPasswordResetEmail, getAuth } from "firebase/auth";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Copyright from "../components/Copyright";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {"Copyright © ParkWhere "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
+/**
+ * A component for displaying forgot password UI.
+ * @component
+ * @returns {JSX.Element} Forgot Password UI.
+ */
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();

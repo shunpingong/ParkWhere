@@ -19,16 +19,11 @@ import {
 import LockIcon from "@mui/icons-material/Lock";
 import { useEffect } from "react";
 
-// function Copyright() {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center">
-//       {"Copyright © ParkWhere "}
-//       {new Date().getFullYear()}
-//       {"."}
-//     </Typography>
-//   );
-// }
-
+/**
+ * A component for displaying change password UI.
+ * @component
+ * @returns {JSX.Element} Change Password UI.
+ */
 const ChangePassword = () => {
   const navigate = useNavigate();
   const [currentPassword, setCurrentPassword] = useState("");
@@ -45,6 +40,13 @@ const ChangePassword = () => {
     }
   }, [auth.currentUser, navigate]);
 
+  /**
+   * Handles the submission of the form to change the password.
+   * @function
+   * @param {Object} e - The event object.
+   * @returns {void}
+   * @async
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -174,7 +176,6 @@ const ChangePassword = () => {
             Cancel
           </Button>
         </Box>
-        {/* <Copyright /> */}
       </Box>
     </Container>
   );

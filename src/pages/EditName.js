@@ -14,16 +14,11 @@ import { getAuth, updateProfile } from "firebase/auth";
 import { useEffect } from "react";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 
-// function Copyright() {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center">
-//       {"Copyright © ParkWhere "}
-//       {new Date().getFullYear()}
-//       {"."}
-//     </Typography>
-//   );
-// }
-
+/**
+ * A component for displaying edit name UI.
+ * @component
+ * @returns {JSX.Element} Edit Name UI.
+ */
 const EditName = () => {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
@@ -71,7 +66,6 @@ const EditName = () => {
       }}
     >
       <CssBaseline />
-
       <Box
         sx={{
           backgroundColor: "white",
@@ -137,7 +131,6 @@ const EditName = () => {
             Cancel
           </Button>
         </Box>
-        {/* <Copyright /> */}
       </Box>
     </Container>
   );

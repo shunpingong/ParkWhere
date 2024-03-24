@@ -1,12 +1,16 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { signOut } from "firebase/auth";
 import { auth } from "../backend/firebase";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import Gmap from "../components/Gmap";
 import Location from "../components/Location";
 
+/**
+ * A component for displaying home page UI.
+ * @component
+ * @returns {JSX.Element} Home Page UI.
+ */
 export default function HomePage() {
   const navigate = useNavigate();
 
@@ -35,7 +39,7 @@ export default function HomePage() {
       <Typography variant="h2" component="h1" gutterBottom>
         Home Page
       </Typography>
-      <Location>
+      {/* <Location>
         <Typography variant="h3" component="h2" gutterBottom>
           {localStorage.getItem("name")}
         </Typography>
@@ -43,7 +47,7 @@ export default function HomePage() {
           {localStorage.getItem("email")}
         </Typography>
         <img src={localStorage.getItem("profilePic")} alt="Profile Picture" />
-      </Location>
+      </Location> */}
       <Gmap />
       <Button onClick={() => navigate("/userprofile")}>
         View User Profile

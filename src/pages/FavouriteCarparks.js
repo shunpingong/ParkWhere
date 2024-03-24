@@ -14,11 +14,16 @@ import { Grid } from "@mui/material";
 import CarParkDisplay from "../components/CarParkDisplay";
 import { useState } from "react";
 
-const defaultTheme = createTheme();
+/**
+ * A component for displaying favourite carparks UI.
+ * @component
+ * @returns {JSX.Element} FavouriteCarparks UI.
+ */
 export default function FavouriteCarparks() {
   const navigate = useNavigate();
   const carParksPerPage = 3; // Change this value as needed
   const [currentPage, setCurrentPage] = useState(1);
+  const defaultTheme = createTheme();
 
   const carParks = [
     {

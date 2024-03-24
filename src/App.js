@@ -11,6 +11,11 @@ import EditName from "./pages/EditName";
 import UserProfile from "./pages/UserProfile";
 import FavouriteCarparks from "./pages/FavouriteCarparks";
 
+/**
+ * A component for rendering the entire application.
+ * @component
+ * @returns {JSX.Element} The App component.
+ */
 function App() {
   return (
     <BrowserRouter>

@@ -1,3 +1,17 @@
+/**
+ * SVY21
+ * @class
+ * @classdesc Library to convert between SVY21 and WGS84 coordinates.
+ * @example
+ * var svy21Converter = new SVY21();
+ * var latLonCoordinates = svy21Converter.computeLatLon(svy21N, svy21E);
+ * console.log("Latitude and Longitude:", latLonCoordinates.lat, latLonCoordinates.lon);
+ * @example
+ * var svy21Converter = new SVY21();
+ * var svy21Coordinates = svy21Converter.computeSVY21(lat, lon);
+ * console.log("SVY21 Coordinates:", svy21Coordinates.N, svy21Coordinates.E);
+ */
+
 var SVY21 = function () {
   // Ref: http://www.linz.govt.nz/geodetic/conversion-coordinates/projection-conversions/transverse-mercator-preliminary-computations/index.aspx
 

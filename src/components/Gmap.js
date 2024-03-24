@@ -1,22 +1,21 @@
-import React from "react";
-import {
-  GoogleMap,
-  useLoadScript,
-  MarkerF,
-  Autocomplete,
-} from "@react-google-maps/api";
+import React, { useState, useEffect } from "react";
+import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import Searchbar from "./Searchbar";
-import { useEffect, useState } from "react";
-
 import SVY21 from "../components/svy21";
 
-const mapContainerStyle = {
-  width: "80%",
-  height: "80vh",
-  margin: "auto",
-};
-
+/**
+ * A component for displaying the Google Map.
+ * @component
+ * @returns {JSX.Element} Google Map component.
+ */
 const Gmap = () => {
+  // Map container style
+  const mapContainerStyle = {
+    width: "80%",
+    height: "80vh",
+    margin: "auto",
+  };
+
   const [latitude, setLatitude] = useState(1.3443944759713704);
   const [longitude, setLongitude] = useState(103.68037761231732);
 

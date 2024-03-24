@@ -8,6 +8,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import DirectionsIcon from "@mui/icons-material/Directions";
 import { Autocomplete } from "@react-google-maps/api";
 
+/**
+ * A component for displaying the search bar for Google Maps.
+ * @component
+ * @returns {JSX.Element} Searchbar component.
+ */
 export default function Searchbar() {
   return (
     <Paper
