@@ -20,7 +20,6 @@ import DirectionsIcon from "@mui/icons-material/Directions";
  * @param {number} carPark.parkCapacity - The capacity of the car park.
  * @returns {JSX.Element} CarParkDisplay component.
  */
-
 function CarParkDisplay({ carPark }) {
   /**
    * Handles searching directions for the car park using Google Maps.
