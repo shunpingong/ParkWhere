@@ -4,20 +4,7 @@ import DirectionsIcon from "@mui/icons-material/Directions";
 
 /**
  * A component for displaying information about a car park.
- *
  * @component
- * @param {Object} carPark - The car park object containing its details.
- * @param {string} carPark.ppName - The name of the car park.
- * @param {string} carPark.weekdayRate - The parking rate for weekdays.
- * @param {string} carPark.weekdayMin - The minimum parking duration for weekdays.
- * @param {string} carPark.satdayRate - The parking rate for Saturdays.
- * @param {string} carPark.satdayMin - The minimum parking duration for Saturdays.
- * @param {string} carPark.sunPHRate - The parking rate for Sundays and Public Holidays.
- * @param {string} carPark.sunPHMin - The minimum parking duration for Sundays and Public Holidays.
- * @param {string} carPark.startTime - The start time of the parking availability.
- * @param {string} carPark.endTime - The end time of the parking availability.
- * @param {string} carPark.parkingSystem - The type of parking system.
- * @param {number} carPark.parkCapacity - The capacity of the car park.
  * @returns {JSX.Element} CarParkDisplay component.
  */
 function CarParkDisplay({ carPark }) {
