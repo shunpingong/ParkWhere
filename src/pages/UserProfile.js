@@ -10,6 +10,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { auth } from "../backend/firebase";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import Paper from "@mui/material/Paper";
 
 const defaultTheme = createTheme();
 export default function UserProfile() {
@@ -55,9 +56,15 @@ export default function UserProfile() {
           <Typography component="h1" variant="h5">
             User Profile
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 2 }} width={300}>
-            <Typography>Name: {auth.currentUser.displayName}</Typography>
-            <Typography>Email: {auth.currentUser.email}</Typography>
+          <Box component="section" noValidate sx={{ mt: 2 }} width={300}>
+            <Paper elevation={3}>
+              <Typography variant="h6">
+                Name: {auth.currentUser.displayName}
+              </Typography>
+              <Typography variant="h6">
+                Email: {auth.currentUser.email}
+              </Typography>
+            </Paper>
             <Button
               fullWidth
               variant="outlined"

@@ -2,40 +2,165 @@ import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../backend/firebase";
 import { useNavigate } from "react-router-dom";
-import validator from "validator";
 import { useEffect } from "react";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {"Copyright © ParkWhere "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { Grid } from "@mui/material";
+import CarParkDisplay from "../components/CarParkDisplay";
+import { useState } from "react";
 
 const defaultTheme = createTheme();
-
 export default function FavouriteCarparks() {
-  const [errorMessage, setErrorMessage] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [tel, setTel] = useState("");
-
   const navigate = useNavigate();
+  const carParksPerPage = 3; // Change this value as needed
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const carParks = [
+    {
+      weekdayMin: "30 mins",
+      weekdayRate: "$1.20",
+      ppCode: "A0006",
+      parkingSystem: "C",
+      ppName: "AMOY STREET ",
+      vehCat: "Car",
+      satdayMin: "30 mins",
+      satdayRate: "$1.20",
+      sunPHMin: "30 mins",
+      sunPHRate: "$0.60",
+      geometries: [
+        {
+          coordinates: "29548.345,29292.548",
+        },
+      ],
+      startTime: "08.30 AM",
+      parkCapacity: 81,
+      endTime: "05.00 PM",
+    },
+    {
+      weekdayMin: "45 mins",
+      weekdayRate: "$1.50",
+      ppCode: "B0001",
+      parkingSystem: "D",
+      ppName: "1",
+      vehCat: "Car",
+      satdayMin: "45 mins",
+      satdayRate: "$1.50",
+      sunPHMin: "45 mins",
+      sunPHRate: "$0.80",
+      geometries: [
+        {
+          coordinates: "12345.678,54321.987",
+        },
+      ],
+      startTime: "09.00 AM",
+      parkCapacity: 120,
+      endTime: "06.00 PM",
+    },
+    {
+      weekdayMin: "45 mins",
+      weekdayRate: "$1.50",
+      ppCode: "B0001",
+      parkingSystem: "D",
+      ppName: "2",
+      vehCat: "Car",
+      satdayMin: "45 mins",
+      satdayRate: "$1.50",
+      sunPHMin: "45 mins",
+      sunPHRate: "$0.80",
+      geometries: [
+        {
+          coordinates: "12345.678,54321.987",
+        },
+      ],
+      startTime: "09.00 AM",
+      parkCapacity: 120,
+      endTime: "06.00 PM",
+    },
+    {
+      weekdayMin: "45 mins",
+      weekdayRate: "$1.50",
+      ppCode: "B0001",
+      parkingSystem: "D",
+      ppName: "3",
+      vehCat: "Car",
+      satdayMin: "45 mins",
+      satdayRate: "$1.50",
+      sunPHMin: "45 mins",
+      sunPHRate: "$0.80",
+      geometries: [
+        {
+          coordinates: "12345.678,54321.987",
+        },
+      ],
+      startTime: "09.00 AM",
+      parkCapacity: 120,
+      endTime: "06.00 PM",
+    },
+    {
+      weekdayMin: "45 mins",
+      weekdayRate: "$1.50",
+      ppCode: "B0001",
+      parkingSystem: "D",
+      ppName: "4",
+      vehCat: "Car",
+      satdayMin: "45 mins",
+      satdayRate: "$1.50",
+      sunPHMin: "45 mins",
+      sunPHRate: "$0.80",
+      geometries: [
+        {
+          coordinates: "12345.678,54321.987",
+        },
+      ],
+      startTime: "09.00 AM",
+      parkCapacity: 120,
+      endTime: "06.00 PM",
+    },
+    {
+      weekdayMin: "45 mins",
+      weekdayRate: "$1.50",
+      ppCode: "B0001",
+      parkingSystem: "D",
+      ppName: "5",
+      vehCat: "Car",
+      satdayMin: "45 mins",
+      satdayRate: "$1.50",
+      sunPHMin: "45 mins",
+      sunPHRate: "$0.80",
+      geometries: [
+        {
+          coordinates: "12345.678,54321.987",
+        },
+      ],
+      startTime: "09.00 AM",
+      parkCapacity: 120,
+      endTime: "06.00 PM",
+    },
+  ];
+
+  const totalCarParks = carParks.length;
+  const totalPages = Math.ceil(totalCarParks / carParksPerPage);
+
+  // Calculate the indexes of the first and last car parks to display on the current page
+  const indexOfLastCarPark = currentPage * carParksPerPage;
+  const indexOfFirstCarPark = indexOfLastCarPark - carParksPerPage;
+  const currentCarParks = carParks.slice(
+    indexOfFirstCarPark,
+    indexOfLastCarPark
+  );
+
+  const nextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const prevPage = () => {
+    setCurrentPage(currentPage - 1);
+  };
 
   useEffect(() => {
     if (!auth.currentUser) {
@@ -43,49 +168,6 @@ export default function FavouriteCarparks() {
       navigate("/");
     }
   }, [navigate]);
-
-  const handleSignUp = (e) => {
-    e.preventDefault(); // prevent page from refreshing
-    // Additional validation for name and phone number
-    if (!name.trim()) {
-      setErrorMessage("Name should not be empty.");
-      return;
-    }
-    if (validator.isMobilePhone(tel, "en-SG") === false) {
-      setErrorMessage("Invalid phone number.");
-      return;
-    }
-    createUserWithEmailAndPassword(auth, email, password) // create user with email and password
-      .then(() => {
-        // if successful
-        navigate("/homePage"); // navigate to main menu page
-      })
-      .catch((err) => {
-        // if unsuccessful
-        switch (err.code) {
-          case "auth/email-already-in-use":
-            setErrorMessage(`This email address is already in use.`);
-            break;
-          case "auth/invalid-email":
-            setErrorMessage(`This email address is invalid.`);
-            break;
-          case "auth/operation-not-allowed":
-            setErrorMessage(`Unexpected error during sign up.`);
-            break;
-          case "auth/weak-password":
-            setErrorMessage(
-              "Password is not strong enough. Add additional characters including special characters and numbers."
-            );
-            break;
-          case "auth/missing-password":
-            setErrorMessage("Password is empty.");
-            break;
-          default:
-            setErrorMessage(err.message);
-            break;
-        }
-      });
-  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -97,15 +179,8 @@ export default function FavouriteCarparks() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          backgroundImage: "url(https://source.unsplash.com/random?parking)",
-          backgroundRepeat: "no-repeat",
-          backgroundColor: (t) =>
-            t.palette.mode === "light"
-              ? t.palette.grey[50]
-              : t.palette.grey[900],
-          backgroundSize: "cover",
-          backgroundPosition: "center",
           height: "100vh",
+          backgroundColor: "grey",
         }}
         maxWidth="xxl"
       >
@@ -121,101 +196,28 @@ export default function FavouriteCarparks() {
             opacity: "0.9",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
+          <Avatar sx={{ m: 1, bgcolor: "grey" }}>
+            <FavoriteIcon fontSize="medium" />
           </Avatar>
           <Typography component="h1" variant="h5">
-            View Favourite Carparks
+            Favourite Carparks
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSignUp}
-            sx={{ mt: 2 }}
-            width={300}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              label="Full Name"
-              placeholder="John Doe"
-              autoFocus
-              // helperText="Enter your email address registered with ParkWhere."
-              name="name"
-              autoComplete="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="tel"
-              label="Phone Number"
-              placeholder="+65xxxxxxxx"
-              type="tel"
-              id="tel"
-              autoComplete="tel"
-              value={tel}
-              onChange={(e) => setTel(e.target.value)} // e.target.value is the value of the input field
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              // helperText="Enter your email address registered with ParkWhere."
-              placeholder="test@example.com"
-              name="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="new-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <Typography variant="body2" color="error">
-              {errorMessage}
-            </Typography>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 1,
-                mb: 1,
-                backgroundColor: "primary.main",
-                "&:hover": { backgroundColor: "primary.dark" },
-              }}
-            >
-              Sign Up
-            </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => navigate("/homepage")}
-            >
-              Cancel
-            </Button>
-            <Box mt={1}>
-              <Typography variant="body2" color="text.secondary" align="center">
-                ParkWhere helps you find parking spots hassle-free.
-              </Typography>
-            </Box>
-            <Copyright />
-          </Box>
+          <Grid container spacing={2} width={300}>
+            {currentCarParks.map((carPark, index) => (
+              <Grid item xs={12} key={index}>
+                <CarParkDisplay carPark={carPark} />
+              </Grid>
+            ))}
+          </Grid>
+          <Button disabled={currentPage === totalPages} onClick={nextPage}>
+            Next
+          </Button>
+          <Button disabled={currentPage === 1} onClick={prevPage}>
+            Previous
+          </Button>
+          <Button variant="outlined" onClick={() => navigate("/homepage")}>
+            Cancel
+          </Button>
         </Box>
       </Container>
     </ThemeProvider>

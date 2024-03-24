@@ -75,8 +75,7 @@ const ChangePassword = () => {
       })
       .catch((error) => {
         setLoading(false);
-        console.error("Error updating password:", error);
-        alert("Error updating password");
+        alert(error.message);
       });
   };
 
