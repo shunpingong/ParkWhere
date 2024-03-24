@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../backend/firebase";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
@@ -49,6 +49,9 @@ export default function SignUp() {
     }
     createUserWithEmailAndPassword(auth, email, password) // create user with email and password
       .then(() => {
+        updateProfile(auth.currentUser, {
+          displayName: name,
+        });
         // if successful
         navigate("/homePage"); // navigate to main menu page
       })
