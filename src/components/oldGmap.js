@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { FaLocationArrow, FaTimes } from "react-icons/fa";
 
-import SVY21 from "../components/svy21";
+import SVY21 from "./svy21";
 
 import {
   useLoadScript,
@@ -173,10 +173,9 @@ function Gmap() {
               }}
             />
           ))}
-          {/* {directionsResponse && (
+          {directionsResponse && (
             <DirectionsRenderer directions={directionsResponse} />
-          )} */}
-          <DirectionsRenderer directions={directionsResponse} />
+          )}
         </GoogleMap>
       </Box>
       <Box

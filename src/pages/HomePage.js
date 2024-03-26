@@ -36,9 +36,7 @@ export default function HomePage() {
 
   return (
     <Box>
-      <Typography variant="h2" component="h1" gutterBottom>
-        Home Page
-      </Typography>
+      <Typography>Home Page</Typography>
       {/* <Location>
         <Typography variant="h3" component="h2" gutterBottom>
           {localStorage.getItem("name")}
