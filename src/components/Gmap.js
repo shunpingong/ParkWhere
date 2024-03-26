@@ -173,10 +173,9 @@ function Gmap() {
               }}
             />
           ))}
-          {/* {directionsResponse && (
+          {directionsResponse && (
             <DirectionsRenderer directions={directionsResponse} />
-          )} */}
-          <DirectionsRenderer directions={directionsResponse} />
+          )}
         </GoogleMap>
       </Box>
       <Box
