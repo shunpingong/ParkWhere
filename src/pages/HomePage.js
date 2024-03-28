@@ -4,7 +4,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../backend/firebase";
 import { useNavigate } from "react-router-dom";
 import Gmap from "../components/Gmap";
-import Header from "../components/Header";
+import Location from "../components/Location";
 
 /**
  * A component for displaying home page UI.
@@ -36,10 +36,24 @@ export default function HomePage() {
 
   return (
     <Box>
-      <Header />
-
-      {/* ParkWhere map Component */}
+      <Typography>Home Page</Typography>
+      {/* <Location>
+        <Typography variant="h3" component="h2" gutterBottom>
+          {localStorage.getItem("name")}
+        </Typography>
+        <Typography variant="h4" component="h3" gutterBottom>
+          {localStorage.getItem("email")}
+        </Typography>
+        <img src={localStorage.getItem("profilePic")} alt="Profile Picture" />
+      </Location> */}
       <Gmap />
+      <Button onClick={() => navigate("/userprofile")}>
+        View User Profile
+      </Button>
+      <Button onClick={() => navigate("/favouritecarparks")}>
+        View Favourite Carparks
+      </Button>
+      <Button onClick={handleLogout}>Logout</Button>
     </Box>
   );
 }

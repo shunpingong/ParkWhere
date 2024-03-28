@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Container,
   Box,
@@ -17,8 +17,13 @@ import {
   reauthenticateWithCredential,
 } from "firebase/auth";
 import LockIcon from "@mui/icons-material/Lock";
-import Header from "../components/Header";
+import { useEffect } from "react";
 
+/**
+ * A component for displaying change password UI.
+ * @component
+ * @returns {JSX.Element} Change Password UI.
+ */
 const ChangePassword = () => {
   const navigate = useNavigate();
   const [currentPassword, setCurrentPassword] = useState("");
@@ -30,10 +35,18 @@ const ChangePassword = () => {
 
   useEffect(() => {
     if (!auth.currentUser) {
+      // No authenticated user, redirect to login page
       navigate("/");
     }
   }, [auth.currentUser, navigate]);
 
+  /**
+   * Handles the submission of the form to change the password.
+   * @function
+   * @param {Object} e - The event object.
+   * @returns {void}
+   * @async
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -69,97 +82,102 @@ const ChangePassword = () => {
   };
 
   return (
-    <>
-      <Header />
-      <Container
-        component="main"
-        maxWidth="xs"
+    <Container
+      component="main"
+      maxWidth="xxl"
+      sx={{
+        justifyContent: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        height: "100vh",
+        backgroundColor: "grey",
+      }}
+    >
+      <CssBaseline />
+      <Box
         sx={{
+          backgroundColor: "white",
+          justifyContent: "center",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          paddingTop: "2rem",
-          backgroundColor: "#f5f5f5",
-          minHeight: "100vh",
+          padding: "30px",
+          borderRadius: "20px",
+          opacity: "0.9",
         }}
       >
-        <CssBaseline />
+        <Avatar sx={{ m: 1, bgcolor: "grey" }}>
+          <LockIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Change Your Password
+        </Typography>
         <Box
-          sx={{
-            marginTop: "2rem",
-            padding: "2rem",
-            borderRadius: "10px",
-            backgroundColor: "#ffffff",
-            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-          }}
+          component="form"
+          noValidate
+          onSubmit={handleSubmit}
+          sx={{ mt: 2 }}
+          width={300}
         >
-          <Avatar sx={{ m: 1, bgcolor: "#1976d2" }}>
-            <LockIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5" sx={{ marginBottom: "1rem" }}>
-            Change Your Password
-          </Typography>
-          <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-            <TextField
-              type="password"
-              margin="normal"
-              required
-              fullWidth
-              id="currentPassword"
-              label="Current Password"
-              name="currentPassword"
-              autoComplete="currentPassword"
-              autoFocus
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-            />
-            <TextField
-              type="password"
-              margin="normal"
-              required
-              fullWidth
-              id="newPassword"
-              label="New Password"
-              name="newPassword"
-              autoComplete="newPassword"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-            <TextField
-              type="password"
-              margin="normal"
-              required
-              fullWidth
-              id="confirmPassword"
-              label="Confirm Password"
-              name="confirmPassword"
-              autoComplete="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              disabled={
-                loading || !(currentPassword && newPassword && confirmPassword)
-              }
-              sx={{ marginTop: "1rem" }}
-            >
-              {loading ? <CircularProgress size={24} /> : "Save"}
-            </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => navigate("/userprofile")}
-              sx={{ marginTop: "1rem" }}
-            >
-              Cancel
-            </Button>
-          </form>
+          <TextField
+            type="password"
+            margin="normal"
+            required
+            fullWidth
+            id="currentPassword"
+            label="Current Password"
+            name="currentPassword"
+            autoComplete="currentPassword"
+            autoFocus
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+          />
+          <TextField
+            type="password"
+            margin="normal"
+            required
+            fullWidth
+            id="newPassword"
+            label="New Password"
+            name="newPassword"
+            autoComplete="newPassword"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+          <TextField
+            type="password"
+            margin="normal"
+            required
+            fullWidth
+            id="confirmPassword"
+            label="Confirm Password"
+            name="confirmPassword"
+            autoComplete="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            disabled={
+              loading || !(currentPassword && newPassword && confirmPassword)
+            }
+            sx={{ mt: 3, mb: 2 }}
+          >
+            {loading ? <CircularProgress size={24} /> : "Save"}
+          </Button>
+          <Button
+            fullWidth
+            variant="outlined"
+            onClick={() => navigate("/userprofile")}
+          >
+            Cancel
+          </Button>
         </Box>
-      </Container>
-    </>
+      </Box>
+    </Container>
   );
 };
 
