@@ -13,12 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { getAuth, updateProfile } from "firebase/auth";
 import { useEffect } from "react";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import Header from "../components/Header";
 
-/**
- * A component for displaying edit name UI.
- * @component
- * @returns {JSX.Element} Edit Name UI.
- */
 const EditName = () => {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
@@ -30,7 +26,6 @@ const EditName = () => {
 
   useEffect(() => {
     if (!auth.currentUser) {
-      // No authenticated user, redirect to login page
       navigate("/");
     }
   }, [auth.currentUser, navigate]);
@@ -46,93 +41,87 @@ const EditName = () => {
       navigate("/userprofile");
     } catch (error) {
       console.error("Error updating profile:", error);
-      // Handle error
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Container
-      component="main"
-      maxWidth="xxl"
-      sx={{
-        justifyContent: "center",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        height: "100vh",
-        backgroundColor: "grey",
-      }}
-    >
-      <CssBaseline />
-      <Box
+    <>
+      <Header />
+      <Container
+        component="main"
+        maxWidth="xs"
         sx={{
-          backgroundColor: "white",
-          justifyContent: "center",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "30px",
-          borderRadius: "20px",
-          opacity: "0.9",
+          paddingTop: "2rem",
+          backgroundColor: "#f5f5f5",
+          minHeight: "100vh",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "grey" }}>
-          <DriveFileRenameOutlineIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Edit Your Name
-        </Typography>
+        <CssBaseline />
         <Box
-          component="form"
-          noValidate
-          onSubmit={handleSubmit}
-          sx={{ mt: 2 }}
-          width={300}
+          sx={{
+            marginTop: "2rem",
+            padding: "2rem",
+            borderRadius: "10px",
+            backgroundColor: "#ffffff",
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+          }}
         >
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="firstName"
-            label="First Name"
-            name="firstName"
-            autoComplete="firstName"
-            autoFocus
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="lastName"
-            label="Last Name"
-            name="lastName"
-            autoComplete="lastName"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            disabled={loading || !(firstName && lastName)}
-            sx={{ mt: 3, mb: 2 }}
-          >
-            {loading ? <CircularProgress size={24} /> : "Save"}
-          </Button>
-          <Button
-            fullWidth
-            variant="outlined"
-            onClick={() => navigate("/userprofile")}
-          >
-            Cancel
-          </Button>
+          <Avatar sx={{ m: 1, bgcolor: "#1976d2" }}>
+            <DriveFileRenameOutlineIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5" sx={{ marginBottom: "1rem" }}>
+            Edit Your Name
+          </Typography>
+          <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="firstName"
+              label="First Name"
+              name="firstName"
+              autoComplete="firstName"
+              autoFocus
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="lastName"
+              label="Last Name"
+              name="lastName"
+              autoComplete="lastName"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              disabled={loading || !(firstName && lastName)}
+              sx={{ marginTop: "1rem" }}
+            >
+              {loading ? <CircularProgress size={24} /> : "Save"}
+            </Button>
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => navigate("/userprofile")}
+              sx={{ marginTop: "1rem" }}
+            >
+              Cancel
+            </Button>
+          </form>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </>
   );
 };
 
