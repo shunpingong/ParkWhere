@@ -21,6 +21,10 @@ import {
 } from "@react-google-maps/api";
 import { useRef, useState, useEffect } from "react";
 
+import { auth } from "../backend/firebase";
+
+import { readFavouriteCarparks } from "../backend/command";
+
 const mapContainerStyle = {
   width: "90%",
   height: "90vh",
@@ -32,7 +36,16 @@ var carparkList = [
   { lat: 1.3369344, lng: 103.743488 },
 ];
 
-var favorite = [{ lat: 1.3443944759713704, lng: 103.68037761231732 }];
+// Read favourite carparks
+var favorite = null;
+readFavouriteCarparks()
+  .then((favouriteCarparks) => {
+    console.log("Favourite carparks:", favouriteCarparks);
+    favorite = favouriteCarparks;
+  })
+  .catch((error) => {
+    console.error("Error fetching favourite carparks:", error);
+  });
 
 var svy21Converter = new SVY21();
 
@@ -135,13 +148,12 @@ function Gmap() {
       w="100vw"
     >
       <Box position="absolute" left={0} top={0} h="100%" w="100%">
-        {/* Google Map Box */}
         <GoogleMap
           center={center}
           zoom={15}
           mapContainerStyle={mapContainerStyle}
           options={{
-            zoomControl: true,
+            zoomControl: false,
             streetViewControl: false,
             mapTypeControl: false,
             fullscreenControl: false,
@@ -163,16 +175,20 @@ function Gmap() {
             <MarkerF
               position={carpark}
               options={{
-                icon: favorite.some(
+                icon: favorite?.some(
                   (favoriteCarpark) =>
                     favoriteCarpark.lat === carpark.lat &&
                     favoriteCarpark.lng === carpark.lng
                 )
                   ? "https://developers.google.com/maps/documentation/javascript/examples/full/images/parking_lot_maps.png"
-                  : "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+                  : {
+                      url: "https://cdn-icons-png.flaticon.com/512/1828/1828884.png",
+                      scaledSize: new window.google.maps.Size(30, 30),
+                    },
               }}
             />
           ))}
+
           {directionsResponse && (
             <DirectionsRenderer directions={directionsResponse} />
           )}

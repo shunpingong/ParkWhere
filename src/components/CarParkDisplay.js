@@ -32,8 +32,8 @@ function CarParkDisplay({ carPark }) {
           </Typography>
           <Typography>Start Time: {carPark.startTime}</Typography>
           <Typography>End Time: {carPark.endTime}</Typography>
-          <Typography>Parking System: {carPark.parkingSystem}</Typography>
-          <Typography>Park Capacity: {carPark.parkCapacity}</Typography>
+          {/* <Typography>Parking System: {carPark.parkingSystem}</Typography>
+          <Typography>Park Capacity: {carPark.parkCapacity}</Typography> */}
         </Grid>
         <Grid
           item

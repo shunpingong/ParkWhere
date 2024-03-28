@@ -13,6 +13,8 @@ import { useEffect } from "react";
 import { Grid } from "@mui/material";
 import CarParkDisplay from "../components/CarParkDisplay";
 import { useState } from "react";
+import { readFavouriteCarparks } from "../backend/command";
+import { getDatabase, ref, update, set } from "firebase/database";
 
 /**
  * A component for displaying favourite carparks UI.
@@ -25,128 +27,196 @@ export default function FavouriteCarparks() {
   const [currentPage, setCurrentPage] = useState(1);
   const defaultTheme = createTheme();
 
-  const carParks = [
-    {
-      weekdayMin: "30 mins",
-      weekdayRate: "$1.20",
-      ppCode: "A0006",
-      parkingSystem: "C",
-      ppName: "AMOY STREET ",
-      vehCat: "Car",
-      satdayMin: "30 mins",
-      satdayRate: "$1.20",
-      sunPHMin: "30 mins",
-      sunPHRate: "$0.60",
-      geometries: [
-        {
-          coordinates: "29548.345,29292.548",
-        },
-      ],
-      startTime: "08.30 AM",
-      parkCapacity: 81,
-      endTime: "05.00 PM",
-    },
-    {
-      weekdayMin: "45 mins",
-      weekdayRate: "$1.50",
-      ppCode: "B0001",
-      parkingSystem: "D",
-      ppName: "1",
-      vehCat: "Car",
-      satdayMin: "45 mins",
-      satdayRate: "$1.50",
-      sunPHMin: "45 mins",
-      sunPHRate: "$0.80",
-      geometries: [
-        {
-          coordinates: "12345.678,54321.987",
-        },
-      ],
-      startTime: "09.00 AM",
-      parkCapacity: 120,
-      endTime: "06.00 PM",
-    },
-    {
-      weekdayMin: "45 mins",
-      weekdayRate: "$1.50",
-      ppCode: "B0001",
-      parkingSystem: "D",
-      ppName: "2",
-      vehCat: "Car",
-      satdayMin: "45 mins",
-      satdayRate: "$1.50",
-      sunPHMin: "45 mins",
-      sunPHRate: "$0.80",
-      geometries: [
-        {
-          coordinates: "12345.678,54321.987",
-        },
-      ],
-      startTime: "09.00 AM",
-      parkCapacity: 120,
-      endTime: "06.00 PM",
-    },
-    {
-      weekdayMin: "45 mins",
-      weekdayRate: "$1.50",
-      ppCode: "B0001",
-      parkingSystem: "D",
-      ppName: "3",
-      vehCat: "Car",
-      satdayMin: "45 mins",
-      satdayRate: "$1.50",
-      sunPHMin: "45 mins",
-      sunPHRate: "$0.80",
-      geometries: [
-        {
-          coordinates: "12345.678,54321.987",
-        },
-      ],
-      startTime: "09.00 AM",
-      parkCapacity: 120,
-      endTime: "06.00 PM",
-    },
-    {
-      weekdayMin: "45 mins",
-      weekdayRate: "$1.50",
-      ppCode: "B0001",
-      parkingSystem: "D",
-      ppName: "4",
-      vehCat: "Car",
-      satdayMin: "45 mins",
-      satdayRate: "$1.50",
-      sunPHMin: "45 mins",
-      sunPHRate: "$0.80",
-      geometries: [
-        {
-          coordinates: "12345.678,54321.987",
-        },
-      ],
-      startTime: "09.00 AM",
-      parkCapacity: 120,
-      endTime: "06.00 PM",
-    },
-    {
-      weekdayMin: "45 mins",
-      weekdayRate: "$1.50",
-      ppCode: "B0001",
-      parkingSystem: "D",
-      ppName: "5",
-      vehCat: "Car",
-      satdayMin: "45 mins",
-      satdayRate: "$1.50",
-      sunPHMin: "45 mins",
-      sunPHRate: "$0.80",
-      geometries: [
-        {
-          coordinates: "12345.678,54321.987",
-        },
-      ],
-      startTime: "09.00 AM",
-      parkCapacity: 120,
-      endTime: "06.00 PM",
-    },
-  ];
+  const [carParks, setCarParks] = useState([]);
+
+  useEffect(() => {
+    const fetchFavouriteCarparks = async () => {
+      try {
+        const favouriteCarparks = await readFavouriteCarparks();
+        setCarParks(favouriteCarparks);
+      } catch (error) {
+        console.error("Error fetching favourite carparks:", error);
+      }
+    };
+
+    fetchFavouriteCarparks();
+  }, []);
+
+  const removeCarpark = (carPark) => {
+    const uid = auth.currentUser.uid;
+    const carparkID = carParks.indexOf(carPark);
+    if (carparkID !== -1) {
+      // If the carparkID is valid
+      const db = getDatabase();
+      carParks.splice(carparkID, 1);
+      const carparkRef = ref(db, `users/${uid}/`);
+      const updatedCarParks = [...carParks];
+      setCarParks(updatedCarParks);
+      set(carparkRef, {
+        favouriteCarpark: updatedCarParks,
+      });
+      console.log("Carpark removed successfully!");
+    } else {
+      console.error("Invalid carpark ID.");
+      alert("Invalid carpark ID. Carpark remains in the list.");
+    }
+  };
+
+  const renameCarpark = (carPark) => {
+    const newCarparkName = prompt(
+      "Enter the new name for the carpark:",
+      carPark.ppName
+    );
+    const uid = auth.currentUser.uid;
+    const carparkID = carParks.indexOf(carPark);
+    if (newCarparkName && carparkID !== -1) {
+      // If the user entered a name and the carparkID is valid
+      const db = getDatabase();
+      const carparkRef = ref(db, `users/${uid}/favouriteCarpark/${carparkID}`);
+      update(carparkRef, {
+        ppName: newCarparkName,
+      })
+        .then(() => {
+          const updatedCarParks = [...carParks];
+          updatedCarParks[carparkID].ppName = newCarparkName;
+          setCarParks(updatedCarParks);
+          console.log("Carpark name updated successfully!");
+        })
+        .catch((error) => {
+          console.error("Error updating carpark name:", error);
+          alert(
+            "An error occurred while updating carpark name. Please try again."
+          );
+        });
+    } else {
+      console.error("Invalid carpark ID or no name entered.");
+      alert(
+        "Invalid carpark ID or no name entered. Carpark name remains unchanged."
+      );
+    }
+  };
+  // const carParks = [
+  //   {
+  //     weekdayMin: "30 mins",
+  //     weekdayRate: "$1.20",
+  //     ppCode: "A0006",
+  //     parkingSystem: "C",
+  //     ppName: "AMOY STREET ",
+  //     vehCat: "Car",
+  //     satdayMin: "30 mins",
+  //     satdayRate: "$1.20",
+  //     sunPHMin: "30 mins",
+  //     sunPHRate: "$0.60",
+  //     geometries: [
+  //       {
+  //         coordinates: "29548.345,29292.548",
+  //       },
+  //     ],
+  //     startTime: "08.30 AM",
+  //     parkCapacity: 81,
+  //     endTime: "05.00 PM",
+  //   },
+  //   {
+  //     weekdayMin: "45 mins",
+  //     weekdayRate: "$1.50",
+  //     ppCode: "B0001",
+  //     parkingSystem: "D",
+  //     ppName: "1",
+  //     vehCat: "Car",
+  //     satdayMin: "45 mins",
+  //     satdayRate: "$1.50",
+  //     sunPHMin: "45 mins",
+  //     sunPHRate: "$0.80",
+  //     geometries: [
+  //       {
+  //         coordinates: "12345.678,54321.987",
+  //       },
+  //     ],
+  //     startTime: "09.00 AM",
+  //     parkCapacity: 120,
+  //     endTime: "06.00 PM",
+  //   },
+  //   {
+  //     weekdayMin: "45 mins",
+  //     weekdayRate: "$1.50",
+  //     ppCode: "B0001",
+  //     parkingSystem: "D",
+  //     ppName: "2",
+  //     vehCat: "Car",
+  //     satdayMin: "45 mins",
+  //     satdayRate: "$1.50",
+  //     sunPHMin: "45 mins",
+  //     sunPHRate: "$0.80",
+  //     geometries: [
+  //       {
+  //         coordinates: "12345.678,54321.987",
+  //       },
+  //     ],
+  //     startTime: "09.00 AM",
+  //     parkCapacity: 120,
+  //     endTime: "06.00 PM",
+  //   },
+  //   {
+  //     weekdayMin: "45 mins",
+  //     weekdayRate: "$1.50",
+  //     ppCode: "B0001",
+  //     parkingSystem: "D",
+  //     ppName: "3",
+  //     vehCat: "Car",
+  //     satdayMin: "45 mins",
+  //     satdayRate: "$1.50",
+  //     sunPHMin: "45 mins",
+  //     sunPHRate: "$0.80",
+  //     geometries: [
+  //       {
+  //         coordinates: "12345.678,54321.987",
+  //       },
+  //     ],
+  //     startTime: "09.00 AM",
+  //     parkCapacity: 120,
+  //     endTime: "06.00 PM",
+  //   },
+  //   {
+  //     weekdayMin: "45 mins",
+  //     weekdayRate: "$1.50",
+  //     ppCode: "B0001",
+  //     parkingSystem: "D",
+  //     ppName: "4",
+  //     vehCat: "Car",
+  //     satdayMin: "45 mins",
+  //     satdayRate: "$1.50",
+  //     sunPHMin: "45 mins",
+  //     sunPHRate: "$0.80",
+  //     geometries: [
+  //       {
+  //         coordinates: "12345.678,54321.987",
+  //       },
+  //     ],
+  //     startTime: "09.00 AM",
+  //     parkCapacity: 120,
+  //     endTime: "06.00 PM",
+  //   },
+  //   {
+  //     weekdayMin: "45 mins",
+  //     weekdayRate: "$1.50",
+  //     ppCode: "B0001",
+  //     parkingSystem: "D",
+  //     ppName: "5",
+  //     vehCat: "Car",
+  //     satdayMin: "45 mins",
+  //     satdayRate: "$1.50",
+  //     sunPHMin: "45 mins",
+  //     sunPHRate: "$0.80",
+  //     geometries: [
+  //       {
+  //         coordinates: "12345.678,54321.987",
+  //       },
+  //     ],
+  //     startTime: "09.00 AM",
+  //     parkCapacity: 120,
+  //     endTime: "06.00 PM",
+  //   },
+  // ];
 
   const totalCarParks = carParks.length;
   const totalPages = Math.ceil(totalCarParks / carParksPerPage);
@@ -211,13 +281,26 @@ export default function FavouriteCarparks() {
             {currentCarParks.map((carPark, index) => (
               <Grid item xs={12} key={index}>
                 <CarParkDisplay carPark={carPark} />
+                <Button
+                  onClick={() => {
+                    console.log(carPark);
+                    removeCarpark(carPark);
+                  }}
+                >
+                  Remove
+                </Button>
+
+                <Button onClick={() => renameCarpark(carPark)}>Rename</Button>
               </Grid>
             ))}
           </Grid>
           <Typography sx={{ mt: 1 }}>
             Page {currentPage} of {totalPages}
           </Typography>
-          <Button disabled={currentPage === totalPages} onClick={nextPage}>
+          <Button
+            disabled={currentPage === totalPages || totalPages === 0}
+            onClick={nextPage}
+          >
             Next
           </Button>
           <Button disabled={currentPage === 1} onClick={prevPage}>

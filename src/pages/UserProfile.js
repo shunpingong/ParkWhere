@@ -11,103 +11,104 @@ import { auth } from "../backend/firebase";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Paper from "@mui/material/Paper";
+import Header from "../components/Header";
+import { signOut } from "firebase/auth";
 
-/**
- * A component for displaying user profile UI.
- * @component
- * @returns {JSX.Element} User Profile UI.
- */
 export default function UserProfile() {
   const navigate = useNavigate();
   const defaultTheme = createTheme();
 
   useEffect(() => {
     if (!auth.currentUser) {
-      // No authenticated user, redirect to login page
       navigate("/");
     }
   }, [navigate]);
 
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        localStorage.clear();
+        // Sign-out successful.
+        navigate("/"); // Redirect to login page
+        console.log("Signed out successfully");
+      })
+      .catch((error) => {
+        console.log("Error signing out");
+      });
+  };
+
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <CssBaseline />
-      <Container
-        component="main"
-        sx={{
-          justifyContent: "center",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          height: "100vh",
-          backgroundColor: "grey",
-        }}
-        maxWidth="xxl"
-      >
-        <Box
+    <>
+      <Header />
+      <ThemeProvider theme={defaultTheme}>
+        <CssBaseline />
+        <Container
+          component="main"
           sx={{
-            backgroundColor: "white",
-            justifyContent: "center",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: "30px",
-            borderRadius: "20px",
-            opacity: "0.9",
+            height: "100vh",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
+          maxWidth="xxl"
         >
-          <Avatar sx={{ m: 1, bgcolor: "grey" }}>
-            <AccountCircleIcon fontSize="medium" />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            User Profile
-          </Typography>
-          <Box component="section" noValidate sx={{ mt: 2 }} width={300}>
-            <Paper elevation={3}>
-              <Typography variant="h6">
+          <Box
+            sx={{
+              backgroundColor: "rgba(255, 255, 255, 0.9)",
+              justifyContent: "center",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: "30px",
+              borderRadius: "20px",
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: "grey", width: 100, height: 100 }}>
+              <AccountCircleIcon
+                sx={{ m: 1, bgcolor: "grey", width: 80, height: 80 }}
+              />
+            </Avatar>
+            <Typography variant="h4" align="center" gutterBottom>
+              User Profile
+            </Typography>
+            <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+              <Typography variant="h6" gutterBottom>
                 Name: {auth.currentUser.displayName}
+                <Button
+                  variant="outlined"
+                  onClick={() => navigate("/editname")}
+                  sx={{ ml: 1 }}
+                >
+                  Edit Name
+                </Button>
               </Typography>
-              <Typography variant="h6">
+              <Typography variant="h6" gutterBottom>
                 Email: {auth.currentUser.email}
               </Typography>
             </Paper>
             <Button
               fullWidth
-              variant="outlined"
+              variant="contained"
+              color="primary"
               onClick={() => navigate("/changepassword")}
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mb: 2 }}
             >
               Change Password
             </Button>
             <Button
               fullWidth
-              variant="outlined"
-              onClick={() => navigate("/editname")}
+              variant="contained"
+              color="error"
+              onClick={handleLogout}
               sx={{ mb: 2 }}
-              //   sx={{
-              //     mt: 1,
-              //     mb: 1,
-              //     backgroundColor: "primary.main",
-              //     "&:hover": { backgroundColor: "primary.dark" },
-              //   }}
             >
-              Edit Name
+              Logout
             </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => navigate("/homepage")}
-            >
-              Cancel
-            </Button>
-            {/* <Box mt={1}>
-              <Typography variant="body2" color="text.secondary" align="center">
-                ParkWhere helps you find parking spots hassle-free.
-              </Typography>
-            </Box>
-            <Copyright /> */}
           </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
+        </Container>
+      </ThemeProvider>
+    </>
   );
 }

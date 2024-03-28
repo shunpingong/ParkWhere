@@ -33,7 +33,7 @@ export default function LoginPage() {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         console.log(userCredential);
-        navigate("/homePage");
+        navigate("/homepage");
       })
       .catch((err) => {
         if (
@@ -64,16 +64,8 @@ export default function LoginPage() {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: "select_account" });
     await signInWithPopup(auth, provider)
-      .then((result) => {
-        const name = result.user.displayName;
-        const email = result.user.email;
-        const profilePic = result.user.photoURL;
-
-        localStorage.setItem("name", name);
-        localStorage.setItem("email", email);
-        localStorage.setItem("profilePic", profilePic);
-
-        navigate("/homePage");
+      .then(() => {
+        navigate("/homepage");
       })
       .catch((error) => {
         console.log(error);
