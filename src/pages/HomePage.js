@@ -5,6 +5,7 @@ import { auth } from "../backend/firebase";
 import { useNavigate } from "react-router-dom";
 import Gmap from "../components/Gmap";
 import Header from "../components/Header";
+import { CarParkDataConverter } from "../components/CarParkDataConverter";
 
 /**
  * A component for displaying home page UI.
@@ -21,25 +22,12 @@ export default function HomePage() {
     }
   }, []);
 
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        localStorage.clear();
-        // Sign-out successful.
-        navigate("/"); // Redirect to login page
-        console.log("Signed out successfully");
-      })
-      .catch((error) => {
-        // An error happened.
-      });
-  };
-
   return (
     <Box>
       <Header />
-
       {/* ParkWhere map Component */}
       <Gmap />
+      <Button onClick={CarParkDataConverter}>hello</Button>
     </Box>
   );
 }

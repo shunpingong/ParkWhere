@@ -9,9 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FaLocationArrow, FaTimes } from "react-icons/fa";
-
 import SVY21 from "../components/svy21";
-
 import {
   useLoadScript,
   GoogleMap,
@@ -20,10 +18,9 @@ import {
   DirectionsRenderer,
 } from "@react-google-maps/api";
 import { useRef, useState, useEffect } from "react";
-
-import { auth } from "../backend/firebase";
-
 import { readFavouriteCarparks } from "../backend/command";
+import { FindCoordinates } from "../components/FindCoordinates";
+import { CarParkDataConverter } from "../components/CarParkDataConverter";
 
 const mapContainerStyle = {
   width: "90%",
@@ -32,50 +29,50 @@ const mapContainerStyle = {
 };
 
 var carparkList = [
-  { lat: 1.3443944759713704, lng: 103.68037761231732 },
-  { lat: 1.3369344, lng: 103.743488 },
+  // { lat: 1.3443944759713704, lng: 103.68037761231732 },
+  // { lat: 1.3369344, lng: 103.743488 },
 ];
 
 // Read favourite carparks
-var favorite = null;
-readFavouriteCarparks()
-  .then((favouriteCarparks) => {
-    console.log("Favourite carparks:", favouriteCarparks);
-    favorite = favouriteCarparks;
-  })
-  .catch((error) => {
-    console.error("Error fetching favourite carparks:", error);
-  });
 
 var svy21Converter = new SVY21();
 
 function Gmap() {
   const [center, setCenter] = useState();
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [svy21N, setsvy21N] = useState(30381.1007417506); // Northing in SVY21
-  const [svy21E, setsvy21E] = useState(32195.1006872542); // Easting in SVY21
+  const [svy21N, setsvy21N] = useState(31490.4942); // Northing in SVY21
+  const [svy21E, setsvy21E] = useState(30314.7936); // Easting in SVY21
+  const [favorite, setFavorite] = useState([]);
+  const [carparkList, setCarparkList] = useState([]);
   var latLonCoordinates = svy21Converter.computeLatLon(svy21N, svy21E);
 
-  useEffect(() => {
+  function myLocation() {
     if (navigator.geolocation) {
-      const watchId = navigator.geolocation.watchPosition(
+      navigator.geolocation.getCurrentPosition(
         (position) => {
-          const { latitude, longitude } = position.coords;
+          var { latitude, longitude } = position.coords;
           setCenter({ lat: latitude, lng: longitude });
-          setMapLoaded(true);
         },
         (error) => {
           console.error(`Error getting geolocation: ${error.message}`);
         }
       );
-
-      // Clean up the watcher when the component unmounts
-      return () => {
-        navigator.geolocation.clearWatch(watchId);
-      };
     } else {
       console.error(`Your browser doesn't support Geolocation`);
     }
+  }
+
+  useEffect(() => {
+    readFavouriteCarparks()
+      .then((favouriteCarparks) => {
+        setFavorite(favouriteCarparks);
+      })
+      .catch((error) => {
+        console.error("Error fetching favourite carparks:", error);
+      });
+    myLocation();
+    setCarparkList(CarParkDataConverter());
+    console.log(carparkList);
   }, []);
 
   const { isLoaded } = useLoadScript({
@@ -99,37 +96,48 @@ function Gmap() {
   /** @type React.MutableRefObject<HTMLInputElement> */
   const destinationRef = useRef();
 
-  if (!isLoaded || !mapLoaded) {
+  if (!isLoaded) {
     return <div>Loading...</div>; // Render a loading indicator until the map is loaded and the location is retrieved
   }
 
-  async function calculateRoute() {
+  async function findCarpark() {
     if (!originRef.current || destinationRef.current.value === "") {
       return;
     }
-
-    // Get the origin and destination
-    const origin = {
-      lat: originRef.current.lat,
-      lng: originRef.current.lng,
-    };
-
-    // eslint-disable-next-line no-undef
-    const directionsService = new google.maps.DirectionsService();
-    const results = await directionsService.route({
-      origin: origin,
-      destination: destinationRef.current.value,
-      // eslint-disable-next-line no-undef
-      travelMode: google.maps.TravelMode.DRIVING,
+    FindCoordinates(destinationRef.current.value, (latitude, longitude) => {
+      setCenter({ lat: latitude, lng: longitude });
+      map.panTo(center);
+      map.setZoom(20);
     });
-    if (results) {
-      setDirectionsResponse(results);
-      setDistance(results.routes[0].legs[0].distance.text);
-      setDuration(results.routes[0].legs[0].duration.text);
-    } else {
-      alert("Error in calculating route");
-    }
   }
+
+  // async function calculateRoute() {
+  //   if (!originRef.current || destinationRef.current.value === "") {
+  //     return;
+  //   }
+
+  //   // Get the origin and destination
+  //   const origin = {
+  //     lat: originRef.current.lat,
+  //     lng: originRef.current.lng,
+  //   };
+
+  //   // eslint-disable-next-line no-undef
+  //   const directionsService = new google.maps.DirectionsService();
+  //   const results = await directionsService.route({
+  //     origin: origin,
+  //     destination: destinationRef.current.value,
+  //     // eslint-disable-next-line no-undef
+  //     travelMode: google.maps.TravelMode.DRIVING,
+  //   });
+  //   if (results) {
+  //     setDirectionsResponse(results);
+  //     setDistance(results.routes[0].legs[0].distance.text);
+  //     setDuration(results.routes[0].legs[0].duration.text);
+  //   } else {
+  //     alert("Error in calculating route");
+  //   }
+  // }
 
   function clearRoute() {
     setDirectionsResponse(null);
@@ -182,13 +190,12 @@ function Gmap() {
                 )
                   ? "https://developers.google.com/maps/documentation/javascript/examples/full/images/parking_lot_maps.png"
                   : {
-                      url: "https://cdn-icons-png.flaticon.com/512/1828/1828884.png",
+                      url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/parking_lot_maps.png",
                       scaledSize: new window.google.maps.Size(30, 30),
                     },
               }}
             />
           ))}
-
           {directionsResponse && (
             <DirectionsRenderer directions={directionsResponse} />
           )}
@@ -219,8 +226,8 @@ function Gmap() {
             </Autocomplete>
           </Box>
           <ButtonGroup>
-            <Button colorScheme="pink" type="submit" onClick={calculateRoute}>
-              Calculate Route
+            <Button colorScheme="pink" type="submit" onClick={findCarpark}>
+              Find Carpark
             </Button>
             <IconButton
               aria-label="center back"
@@ -236,10 +243,7 @@ function Gmap() {
             aria-label="center back"
             icon={<FaLocationArrow />}
             isRound
-            onClick={() => {
-              map.panTo(center);
-              map.setZoom(15);
-            }}
+            onClick={myLocation}
           />
         </HStack>
       </Box>

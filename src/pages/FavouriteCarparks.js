@@ -1,252 +1,100 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { auth } from "../backend/firebase";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { Grid } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Grid, TextField, IconButton, Paper } from "@mui/material";
 import CarParkDisplay from "../components/CarParkDisplay";
-import { useState } from "react";
-import { readFavouriteCarparks } from "../backend/command";
-import { getDatabase, ref, update, set } from "firebase/database";
+import {
+  readFavouriteCarparks,
+  removeFavouriteCarpark,
+  renameFavouriteCarpark,
+} from "../backend/command";
+import SearchIcon from "@mui/icons-material/Search";
 
-/**
- * A component for displaying favourite carparks UI.
- * @component
- * @returns {JSX.Element} FavouriteCarparks UI.
- */
+import Header from "../components/Header";
+
 export default function FavouriteCarparks() {
-  const navigate = useNavigate();
-  const carParksPerPage = 3; // Change this value as needed
-  const [currentPage, setCurrentPage] = useState(1);
   const defaultTheme = createTheme();
 
   const [carParks, setCarParks] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [originLat, setOriginLat] = useState(null);
+  const [originLng, setOriginLng] = useState(null);
 
   useEffect(() => {
-    const fetchFavouriteCarparks = async () => {
-      try {
-        const favouriteCarparks = await readFavouriteCarparks();
-        setCarParks(favouriteCarparks);
-      } catch (error) {
-        console.error("Error fetching favourite carparks:", error);
-      }
-    };
-
     fetchFavouriteCarparks();
+    fetchGeoLocation();
   }, []);
 
-  const removeCarpark = (carPark) => {
-    const uid = auth.currentUser.uid;
-    const carparkID = carParks.indexOf(carPark);
-    if (carparkID !== -1) {
-      // If the carparkID is valid
-      const db = getDatabase();
-      carParks.splice(carparkID, 1);
-      const carparkRef = ref(db, `users/${uid}/`);
-      const updatedCarParks = [...carParks];
-      setCarParks(updatedCarParks);
-      set(carparkRef, {
-        favouriteCarpark: updatedCarParks,
-      });
-      console.log("Carpark removed successfully!");
-    } else {
-      console.error("Invalid carpark ID.");
-      alert("Invalid carpark ID. Carpark remains in the list.");
+  const fetchFavouriteCarparks = async () => {
+    try {
+      const favouriteCarparks = await readFavouriteCarparks();
+      setCarParks(favouriteCarparks);
+    } catch (error) {
+      console.error("Error fetching favourite carparks:", error);
     }
   };
 
-  const renameCarpark = (carPark) => {
+  const fetchGeoLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setOriginLat(latitude);
+          setOriginLng(longitude);
+        },
+        (error) => {
+          console.error(`Error getting geolocation: ${error.message}`);
+        }
+      );
+    } else {
+      console.error(`Your browser doesn't support Geolocation`);
+    }
+  };
+
+  const handleRemoveFavouriteCarpark = async (carpark) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to remove this car park?"
+    );
+    if (confirmed) {
+      removeFavouriteCarpark(carParks, carpark);
+      fetchFavouriteCarparks();
+    }
+  };
+
+  const handleRenameFavouriteCarpark = (carpark) => {
     const newCarparkName = prompt(
       "Enter the new name for the carpark:",
-      carPark.ppName
+      carpark.cpID
     );
-    const uid = auth.currentUser.uid;
-    const carparkID = carParks.indexOf(carPark);
-    if (newCarparkName && carparkID !== -1) {
-      // If the user entered a name and the carparkID is valid
-      const db = getDatabase();
-      const carparkRef = ref(db, `users/${uid}/favouriteCarpark/${carparkID}`);
-      update(carparkRef, {
-        ppName: newCarparkName,
-      })
-        .then(() => {
-          const updatedCarParks = [...carParks];
-          updatedCarParks[carparkID].ppName = newCarparkName;
-          setCarParks(updatedCarParks);
-          console.log("Carpark name updated successfully!");
-        })
-        .catch((error) => {
-          console.error("Error updating carpark name:", error);
-          alert(
-            "An error occurred while updating carpark name. Please try again."
-          );
-        });
+    if (newCarparkName !== null) {
+      renameFavouriteCarpark(carParks, carpark, newCarparkName);
+      fetchFavouriteCarparks();
+    }
+  };
+
+  const generateDirectionsLink = (destLat, destLng) => {
+    if (originLat && originLng) {
+      const url = `https://www.google.com/maps/dir/?api=1&origin=${originLat},${originLng}&destination=${destLat},${destLng}&travelmode=driving`;
+      window.open(url, "_blank");
     } else {
-      console.error("Invalid carpark ID or no name entered.");
-      alert(
-        "Invalid carpark ID or no name entered. Carpark name remains unchanged."
-      );
+      console.error("Geolocation data not available yet.");
     }
   };
-  // const carParks = [
-  //   {
-  //     weekdayMin: "30 mins",
-  //     weekdayRate: "$1.20",
-  //     ppCode: "A0006",
-  //     parkingSystem: "C",
-  //     ppName: "AMOY STREET ",
-  //     vehCat: "Car",
-  //     satdayMin: "30 mins",
-  //     satdayRate: "$1.20",
-  //     sunPHMin: "30 mins",
-  //     sunPHRate: "$0.60",
-  //     geometries: [
-  //       {
-  //         coordinates: "29548.345,29292.548",
-  //       },
-  //     ],
-  //     startTime: "08.30 AM",
-  //     parkCapacity: 81,
-  //     endTime: "05.00 PM",
-  //   },
-  //   {
-  //     weekdayMin: "45 mins",
-  //     weekdayRate: "$1.50",
-  //     ppCode: "B0001",
-  //     parkingSystem: "D",
-  //     ppName: "1",
-  //     vehCat: "Car",
-  //     satdayMin: "45 mins",
-  //     satdayRate: "$1.50",
-  //     sunPHMin: "45 mins",
-  //     sunPHRate: "$0.80",
-  //     geometries: [
-  //       {
-  //         coordinates: "12345.678,54321.987",
-  //       },
-  //     ],
-  //     startTime: "09.00 AM",
-  //     parkCapacity: 120,
-  //     endTime: "06.00 PM",
-  //   },
-  //   {
-  //     weekdayMin: "45 mins",
-  //     weekdayRate: "$1.50",
-  //     ppCode: "B0001",
-  //     parkingSystem: "D",
-  //     ppName: "2",
-  //     vehCat: "Car",
-  //     satdayMin: "45 mins",
-  //     satdayRate: "$1.50",
-  //     sunPHMin: "45 mins",
-  //     sunPHRate: "$0.80",
-  //     geometries: [
-  //       {
-  //         coordinates: "12345.678,54321.987",
-  //       },
-  //     ],
-  //     startTime: "09.00 AM",
-  //     parkCapacity: 120,
-  //     endTime: "06.00 PM",
-  //   },
-  //   {
-  //     weekdayMin: "45 mins",
-  //     weekdayRate: "$1.50",
-  //     ppCode: "B0001",
-  //     parkingSystem: "D",
-  //     ppName: "3",
-  //     vehCat: "Car",
-  //     satdayMin: "45 mins",
-  //     satdayRate: "$1.50",
-  //     sunPHMin: "45 mins",
-  //     sunPHRate: "$0.80",
-  //     geometries: [
-  //       {
-  //         coordinates: "12345.678,54321.987",
-  //       },
-  //     ],
-  //     startTime: "09.00 AM",
-  //     parkCapacity: 120,
-  //     endTime: "06.00 PM",
-  //   },
-  //   {
-  //     weekdayMin: "45 mins",
-  //     weekdayRate: "$1.50",
-  //     ppCode: "B0001",
-  //     parkingSystem: "D",
-  //     ppName: "4",
-  //     vehCat: "Car",
-  //     satdayMin: "45 mins",
-  //     satdayRate: "$1.50",
-  //     sunPHMin: "45 mins",
-  //     sunPHRate: "$0.80",
-  //     geometries: [
-  //       {
-  //         coordinates: "12345.678,54321.987",
-  //       },
-  //     ],
-  //     startTime: "09.00 AM",
-  //     parkCapacity: 120,
-  //     endTime: "06.00 PM",
-  //   },
-  //   {
-  //     weekdayMin: "45 mins",
-  //     weekdayRate: "$1.50",
-  //     ppCode: "B0001",
-  //     parkingSystem: "D",
-  //     ppName: "5",
-  //     vehCat: "Car",
-  //     satdayMin: "45 mins",
-  //     satdayRate: "$1.50",
-  //     sunPHMin: "45 mins",
-  //     sunPHRate: "$0.80",
-  //     geometries: [
-  //       {
-  //         coordinates: "12345.678,54321.987",
-  //       },
-  //     ],
-  //     startTime: "09.00 AM",
-  //     parkCapacity: 120,
-  //     endTime: "06.00 PM",
-  //   },
-  // ];
 
-  const totalCarParks = carParks.length;
-  const totalPages = Math.ceil(totalCarParks / carParksPerPage);
-
-  // Calculate the indexes of the first and last car parks to display on the current page
-  const indexOfLastCarPark = currentPage * carParksPerPage;
-  const indexOfFirstCarPark = indexOfLastCarPark - carParksPerPage;
-  const currentCarParks = carParks.slice(
-    indexOfFirstCarPark,
-    indexOfLastCarPark
-  );
-
-  const nextPage = () => {
-    setCurrentPage(currentPage + 1);
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
   };
-
-  const prevPage = () => {
-    setCurrentPage(currentPage - 1);
-  };
-
-  useEffect(() => {
-    if (!auth.currentUser) {
-      // No authenticated user, redirect to login page
-      navigate("/");
-    }
-  }, [navigate]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
+      <Header />
       <Container
         component="main"
         sx={{
@@ -254,7 +102,6 @@ export default function FavouriteCarparks() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          height: "100vh",
           backgroundColor: "grey",
         }}
         maxWidth="xxl"
@@ -269,46 +116,60 @@ export default function FavouriteCarparks() {
             padding: "30px",
             borderRadius: "20px",
             opacity: "0.9",
+            width: "100%",
+            overflow: "auto",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "grey" }}>
+          <Avatar sx={{ m: 1, bgcolor: "red" }}>
             <FavoriteIcon fontSize="medium" />
           </Avatar>
           <Typography sx={{ mb: 2 }} component="h1" variant="h5">
             Favourite Carparks
           </Typography>
-          <Grid container spacing={2} width={300}>
-            {currentCarParks.map((carPark, index) => (
-              <Grid item xs={12} key={index}>
-                <CarParkDisplay carPark={carPark} />
-                <Button
-                  onClick={() => {
-                    console.log(carPark);
-                    removeCarpark(carPark);
-                  }}
-                >
-                  Remove
-                </Button>
-
-                <Button onClick={() => renameCarpark(carPark)}>Rename</Button>
-              </Grid>
-            ))}
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Search"
+            value={searchQuery}
+            onChange={handleSearch}
+            InputProps={{
+              endAdornment: (
+                <IconButton size="large">
+                  <SearchIcon />
+                </IconButton>
+              ),
+            }}
+          />
+          <Grid container spacing={2}>
+            {carParks
+              ?.filter((carPark) =>
+                carPark.cpID.toLowerCase().includes(searchQuery.toLowerCase())
+              )
+              .map((carPark, index) => (
+                <Grid item xs={12} key={index}>
+                  <Paper
+                    sx={{
+                      padding: "20px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      width: "100%",
+                    }}
+                  >
+                    <Box sx={{ width: "100%" }}>
+                      <CarParkDisplay
+                        carPark={carPark}
+                        onGenerateDirectionsLink={(lat, lng) =>
+                          generateDirectionsLink(lat, lng)
+                        }
+                        onRemove={() => handleRemoveFavouriteCarpark(carPark)}
+                        onRename={() => handleRenameFavouriteCarpark(carPark)}
+                      />
+                    </Box>
+                  </Paper>
+                </Grid>
+              ))}
           </Grid>
-          <Typography sx={{ mt: 1 }}>
-            Page {currentPage} of {totalPages}
-          </Typography>
-          <Button
-            disabled={currentPage === totalPages || totalPages === 0}
-            onClick={nextPage}
-          >
-            Next
-          </Button>
-          <Button disabled={currentPage === 1} onClick={prevPage}>
-            Previous
-          </Button>
-          <Button variant="outlined" onClick={() => navigate("/homepage")}>
-            Cancel
-          </Button>
         </Box>
       </Container>
     </ThemeProvider>

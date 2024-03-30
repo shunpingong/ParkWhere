@@ -12,7 +12,7 @@
  * console.log("SVY21 Coordinates:", svy21Coordinates.N, svy21Coordinates.E);
  */
 
-var SVY21 = function () {
+export let SVY21 = function () {
   // Ref: http://www.linz.govt.nz/geodetic/conversion-coordinates/projection-conversions/transverse-mercator-preliminary-computations/index.aspx
 
   // WGS84 Datum

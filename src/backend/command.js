@@ -30,7 +30,6 @@ const readFavouriteCarparks = () => {
           const favouriteCarparks = Object.values(
             snapshot.val()["favouriteCarpark"]
           );
-          console.log(favouriteCarparks);
           resolve(favouriteCarparks);
         } else {
           resolve([]); // Return an empty array if the data doesn't exist
@@ -66,7 +65,7 @@ const writeFavouriteCarparks = (favouriteCarparks) => {
 };
 
 // Adds 1 carpark into database (parameters: A DICTIONARY eg: {lat: 1.3443944759713704,lng: 103.68037761231732})
-const addFavouriteCarparks = (element) => {
+const addFavouriteCarpark = (element) => {
   var uid = getUID();
   const dataLocation = "users";
   const reference = ref(db, `${dataLocation}/${uid}`);
@@ -80,21 +79,54 @@ const addFavouriteCarparks = (element) => {
     });
 };
 
-//     const snapshot = await get(reference);
 // Removes 1 carpark from database (parameters: A DICTIONARY eg: {lat: 1.3443944759713704,lng: 103.68037761231732})
-const removeFavouriteCarparks = (element) => {
-  var uid = getUID();
-  const dataLocation = "users";
-  const reference = ref(db, `${dataLocation}/${uid}`);
-  readFavouriteCarparks()
-    .then((favouriteCarparksArray) => {
-      // find the index of the element and remove by 1
-      favouriteCarparksArray.splice(favouriteCarparksArray.indexOf(element), 1);
-      writeFavouriteCarparks(favouriteCarparksArray);
-    })
-    .catch((error) => {
-      console.error("Error fetching favourite carparks:", error);
+const removeFavouriteCarpark = (carParks, carPark) => {
+  const uid = auth.currentUser.uid;
+  const carparkID = carParks.indexOf(carPark);
+  if (carparkID !== -1) {
+    // If the carparkID is valid
+    carParks.splice(carparkID, 1);
+    const carparkRef = ref(db, `users/${uid}/`);
+    const updatedCarParks = [...carParks];
+    set(carparkRef, {
+      favouriteCarpark: updatedCarParks,
     });
+    console.log("Carpark removed successfully!");
+  } else {
+    console.error("Invalid carpark ID.");
+    return -1;
+  }
 };
 
-export { readFavouriteCarparks, addFavouriteCarparks, removeFavouriteCarparks };
+const renameFavouriteCarpark = (carParks, carPark, newCarparkName) => {
+  const uid = auth.currentUser.uid;
+  const carparkID = carParks.indexOf(carPark);
+  if (newCarparkName && carparkID !== -1) {
+    // If the user entered a name and the carparkID is valid
+    const carparkRef = ref(db, `users/${uid}/favouriteCarpark/${carparkID}`);
+    update(carparkRef, {
+      cpID: newCarparkName,
+    })
+      .then(() => {
+        const updatedCarParks = [...carParks];
+        updatedCarParks[carparkID].cpID = newCarparkName;
+        console.log("Carpark name updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating carpark name:", error);
+        alert(
+          "An error occurred while updating carpark name. Please try again."
+        );
+      });
+  } else {
+    console.error("Invalid carpark ID or no name entered.");
+    return -1;
+  }
+};
+
+export {
+  readFavouriteCarparks,
+  addFavouriteCarpark,
+  removeFavouriteCarpark,
+  renameFavouriteCarpark,
+};

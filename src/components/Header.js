@@ -18,10 +18,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import StarIcon from "@mui/icons-material/Star";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import {
-  addFavouriteCarparks,
-  readFavouriteCarparks,
-} from "../backend/command";
+import { addFavouriteCarpark, readFavouriteCarparks } from "../backend/command";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -173,10 +170,11 @@ export default function Header() {
                 <MenuItem onClick={readFavouriteCarparks}> Read </MenuItem>
                 <MenuItem
                   onClick={() =>
-                    addFavouriteCarparks({
+                    addFavouriteCarpark({
                       lat: 1.3443944759713704,
                       lng: 103.68037761231732,
-                      ppName: "hehe",
+                      cpID: "J91",
+                      address: "JURONG WEST ST 91",
                       weekdayRate: "1.20",
                       weekdayMin: "30 mins",
                       satdayRate: "1.20",
