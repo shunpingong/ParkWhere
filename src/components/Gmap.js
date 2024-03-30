@@ -6,7 +6,6 @@ import {
   HStack,
   IconButton,
   Input,
-  Text,
 } from "@chakra-ui/react";
 import { FaLocationArrow, FaTimes } from "react-icons/fa";
 import {
@@ -15,11 +14,23 @@ import {
   MarkerF,
   Autocomplete,
   DirectionsRenderer,
+  InfoWindow,
 } from "@react-google-maps/api";
 import { useRef, useState, useEffect } from "react";
 import { readFavouriteCarparks } from "../backend/command";
 import { FindCoordinates } from "../components/FindCoordinates";
 import { CarParkDataConverter } from "../components/CarParkDataConverter";
+import { addFavouriteCarpark } from "../backend/command";
+import { Typography } from "@mui/material";
+import { Grid } from "@mui/material";
+import { red, green, blue } from "@mui/material/colors";
+import MoneyIcon from "@mui/icons-material/Money";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import DirectionsIcon from "@mui/icons-material/Directions";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import DriveEtaIcon from "@mui/icons-material/DriveEta";
+import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 
 const mapContainerStyle = {
   width: "90%",
@@ -29,9 +40,11 @@ const mapContainerStyle = {
 
 function Gmap() {
   const [center, setCenter] = useState();
-
   const [favorite, setFavorite] = useState([]);
   const [carparkList, setCarparkList] = useState([]);
+  const [selectedCarpark, setSelectedCarpark] = useState(null);
+  const [originLat, setOriginLat] = useState(null);
+  const [originLng, setOriginLng] = useState(null);
 
   function myLocation() {
     if (navigator.geolocation) {
@@ -39,6 +52,8 @@ function Gmap() {
         (position) => {
           var { latitude, longitude } = position.coords;
           setCenter({ lat: latitude, lng: longitude });
+          setOriginLat(latitude);
+          setOriginLng(longitude);
         },
         (error) => {
           console.error(`Error getting geolocation: ${error.message}`);
@@ -48,6 +63,21 @@ function Gmap() {
       console.error(`Your browser doesn't support Geolocation`);
     }
   }
+
+  const generateDirectionsLink = (destLat, destLng) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to navigate to this car park?"
+    );
+
+    if (confirmed) {
+      if (navigator.geolocation && center) {
+        const url = `https://www.google.com/maps/dir/?api=1&origin=${originLat},${originLng}&destination=${destLat},${destLng}&travelmode=driving`;
+        window.open(url, "_blank");
+      } else {
+        console.error("Geolocation data not available yet.");
+      }
+    }
+  };
 
   useEffect(() => {
     readFavouriteCarparks()
@@ -59,9 +89,6 @@ function Gmap() {
       });
     myLocation();
     setCarparkList(CarParkDataConverter());
-
-    // console.log("hehe", carparkList);
-    // console.log("testing", favorite);
   }, []);
 
   const { isLoaded } = useLoadScript({
@@ -75,14 +102,6 @@ function Gmap() {
   const [duration, setDuration] = useState("");
 
   /** @type React.MutableRefObject<HTMLInputElement> */
-  const originRef = useRef();
-
-  // Set the originRef to the current center if it exists
-  if (center) {
-    originRef.current = center;
-  }
-
-  /** @type React.MutableRefObject<HTMLInputElement> */
   const destinationRef = useRef();
 
   if (!isLoaded) {
@@ -90,7 +109,7 @@ function Gmap() {
   }
 
   async function findCarpark() {
-    if (!originRef.current || destinationRef.current.value === "") {
+    if (destinationRef.current.value === "") {
       return;
     }
     FindCoordinates(destinationRef.current.value, (latitude, longitude) => {
@@ -100,33 +119,29 @@ function Gmap() {
     });
   }
 
-  // async function calculateRoute() {
-  //   if (!originRef.current || destinationRef.current.value === "") {
-  //     return;
-  //   }
+  async function calculateRoute(lat, lng) {
+    if (originLat === null || originLng === null) {
+      alert("Please enable geolocation to use this feature");
+      return;
+    }
 
-  //   // Get the origin and destination
-  //   const origin = {
-  //     lat: originRef.current.lat,
-  //     lng: originRef.current.lng,
-  //   };
+    const origin = { lat: originLat, lng: originLng };
 
-  //   // eslint-disable-next-line no-undef
-  //   const directionsService = new google.maps.DirectionsService();
-  //   const results = await directionsService.route({
-  //     origin: origin,
-  //     destination: destinationRef.current.value,
-  //     // eslint-disable-next-line no-undef
-  //     travelMode: google.maps.TravelMode.DRIVING,
-  //   });
-  //   if (results) {
-  //     setDirectionsResponse(results);
-  //     setDistance(results.routes[0].legs[0].distance.text);
-  //     setDuration(results.routes[0].legs[0].duration.text);
-  //   } else {
-  //     alert("Error in calculating route");
-  //   }
-  // }
+    // eslint-disable-next-line no-undef
+    const directionsService = new google.maps.DirectionsService();
+    const results = await directionsService.route({
+      origin: origin,
+      destination: { lat: lat, lng: lng },
+      // eslint-disable-next-line no-undef
+      travelMode: google.maps.TravelMode.DRIVING,
+    });
+    if (results) {
+      setDistance(results.routes[0].legs[0].distance.text);
+      setDuration(results.routes[0].legs[0].duration.text);
+    } else {
+      alert("Error in calculating route");
+    }
+  }
 
   function clearRoute() {
     setDirectionsResponse(null);
@@ -161,6 +176,7 @@ function Gmap() {
           <MarkerF position={center} />
           {carparkList.map((carpark) => (
             <MarkerF
+              key={carpark.cpID}
               position={carpark}
               options={{
                 icon: favorite?.some(
@@ -176,11 +192,166 @@ function Gmap() {
                 //     scaledSize: new window.google.maps.Size(30, 30),
                 //   },
               }}
+              onClick={() => setSelectedCarpark(carpark)}
             />
           ))}
-          {directionsResponse && (
-            <DirectionsRenderer directions={directionsResponse} />
+          {selectedCarpark && (
+            <InfoWindow
+              onClick={[
+                calculateRoute(selectedCarpark.lat, selectedCarpark.lng),
+              ]}
+              position={selectedCarpark}
+              onCloseClick={() => setSelectedCarpark(null)}
+            >
+              <Box>
+                <Grid container alignItems="center">
+                  <Grid item xs={12}>
+                    <Typography variant="h5" sx={{ mb: 1 }}>
+                      {selectedCarpark.cpID}
+                    </Typography>
+                    <Grid
+                      container
+                      alignItems="center"
+                      spacing={1}
+                      sx={{ mt: 1 }}
+                    >
+                      <Grid item>
+                        <LocationOnIcon
+                          sx={{ color: red[500], fontSize: 20 }}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" fontSize={16}>
+                          <strong>Address:</strong> {selectedCarpark.address}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container alignItems="center" spacing={1}>
+                      <Grid item>
+                        <CompareArrowsIcon sx={{ fontSize: 20 }} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" fontSize={16}>
+                          <strong>Estimated Distance:</strong> {distance}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container alignItems="center" spacing={1}>
+                      <Grid item>
+                        <AccessTimeIcon sx={{ fontSize: 20 }} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" fontSize={16}>
+                          <strong>Estimated Duration:</strong> {duration}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container alignItems="center" spacing={1}>
+                      <Grid item>
+                        <DriveEtaIcon sx={{ fontSize: 20 }} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" fontSize={16}>
+                          <strong>Mode:</strong> Driving
+                        </Typography>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container alignItems="center" spacing={1}>
+                      <Grid item>
+                        <MoneyIcon sx={{ color: green[500], fontSize: 20 }} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" fontSize={16}>
+                          <strong>Weekday:</strong> $
+                          {selectedCarpark.weekdayRate} /{" "}
+                          {selectedCarpark.weekdayMin}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container alignItems="center" spacing={1}>
+                      <Grid item>
+                        <MoneyIcon sx={{ color: green[500], fontSize: 20 }} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" fontSize={16}>
+                          <strong>Sat:</strong> ${selectedCarpark.satdayRate} /{" "}
+                          {selectedCarpark.satdayMin}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid container alignItems="center" spacing={1}>
+                      <Grid item>
+                        <MoneyIcon sx={{ color: green[500], fontSize: 20 }} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" fontSize={16}>
+                          <strong>Sun/PH:</strong> ${selectedCarpark.sunPHRate}{" "}
+                          / {selectedCarpark.sunPHMin}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid container alignItems="center" spacing={1}>
+                      <Grid item>
+                        <AccessTimeIcon
+                          sx={{ color: blue[500], fontSize: 20 }}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body2" fontSize={16}>
+                          <strong>Start Time:</strong>{" "}
+                          {selectedCarpark.startTime}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid container alignItems="center" spacing={1}>
+                      <Grid item>
+                        <AccessTimeIcon
+                          sx={{ color: blue[500], fontSize: 20 }}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body2" fontSize={16}>
+                          <strong>End Time:</strong> {selectedCarpark.endTime}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={12} container justifyContent="flex-end">
+                      <IconButton
+                        onClick={() =>
+                          generateDirectionsLink(
+                            selectedCarpark.lat,
+                            selectedCarpark.lng
+                          )
+                        }
+                      >
+                        <DirectionsIcon
+                          sx={{ color: blue[500], fontSize: 32 }}
+                        />
+                      </IconButton>
+
+                      <IconButton
+                        onClick={() =>
+                          addFavouriteCarpark(favorite, selectedCarpark)
+                        }
+                        sx={{ color: "red" }}
+                      >
+                        <FavoriteIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Box>
+            </InfoWindow>
           )}
+
+          {/* {directionsResponse && (
+            <DirectionsRenderer directions={directionsResponse} />
+          )} */}
         </GoogleMap>
       </Box>
       <Box
@@ -216,17 +387,13 @@ function Gmap() {
               icon={<FaTimes />}
               onClick={clearRoute}
             />
+            <IconButton
+              aria-label="center back"
+              icon={<FaLocationArrow />}
+              isRound
+              onClick={myLocation}
+            />
           </ButtonGroup>
-        </HStack>
-        <HStack spacing={4} mt={4} justifyContent="space-between">
-          <Text>Distance: {distance} </Text>
-          <Text>Duration: {duration} </Text>
-          <IconButton
-            aria-label="center back"
-            icon={<FaLocationArrow />}
-            isRound
-            onClick={myLocation}
-          />
         </HStack>
       </Box>
     </Flex>

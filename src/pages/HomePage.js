@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
-import { Box, Typography, Button } from "@mui/material";
-import { signOut } from "firebase/auth";
+import { Box } from "@mui/material";
 import { auth } from "../backend/firebase";
 import { useNavigate } from "react-router-dom";
 import Gmap from "../components/Gmap";
 import Header from "../components/Header";
-import { CarParkDataConverter } from "../components/CarParkDataConverter";
 
 /**
  * A component for displaying home page UI.
@@ -20,14 +18,13 @@ export default function HomePage() {
       // No authenticated user, redirect to login page
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <Box>
       <Header />
       {/* ParkWhere map Component */}
       <Gmap />
-      <Button onClick={CarParkDataConverter}>hello</Button>
     </Box>
   );
 }

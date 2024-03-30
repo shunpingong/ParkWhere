@@ -46,30 +46,54 @@ const readFavouriteCarparks = () => {
  * @returns {Promise<void>} A promise that resolves when the favorite car parks
  * have been successfully written to Firebase.
  */
-const writeFavouriteCarparks = (favouriteCarparks) => {
-  var uid = getUID();
-  const dataLocation = "users";
 
-  //   try {
-  //     const user = await readCurrentUserData();
-  set(ref(db, `${dataLocation}/${uid}/`), {
-    favouriteCarpark: favouriteCarparks,
-  });
-};
+// const writeFavouriteCarparks = (favouriteCarparks) => {
+//   var uid = getUID();
+//   const dataLocation = "users";
+
+//   //   try {
+//   //     const user = await readCurrentUserData();
+//   set(ref(db, `${dataLocation}/${uid}/`), {
+//     favouriteCarpark: favouriteCarparks,
+//   });
+// };
 
 // Adds 1 carpark into database (parameters: A DICTIONARY eg: {lat: 1.3443944759713704,lng: 103.68037761231732})
-const addFavouriteCarpark = (element) => {
-  // var uid = getUID();
-  // const dataLocation = "users";
-  // const reference = ref(db, `${dataLocation}/${uid}`);
-  readFavouriteCarparks()
-    .then((favouriteCarparksArray) => {
-      favouriteCarparksArray.push(element);
-      writeFavouriteCarparks(favouriteCarparksArray);
-    })
-    .catch((error) => {
-      console.error("Error fetching favourite carparks:", error);
-    });
+// const addFavouriteCarpark = (element) => {
+//   // var uid = getUID();
+//   // const dataLocation = "users";
+//   // const reference = ref(db, `${dataLocation}/${uid}`);
+//   readFavouriteCarparks()
+//     .then((favouriteCarparksArray) => {
+//       favouriteCarparksArray.push(element);
+//       writeFavouriteCarparks(favouriteCarparksArray);
+//     })
+//     .catch((error) => {
+//       console.error("Error fetching favourite carparks:", error);
+//     });
+// };
+
+const addFavouriteCarpark = (carParks, carPark) => {
+  const confirmed = window.confirm(
+    "Are you sure you want to add this car park?"
+  );
+  if (confirmed) {
+    const uid = auth.currentUser.uid;
+    const carparkID = carParks.indexOf(carPark);
+    if (carparkID === -1) {
+      // If the carparkID is invalid
+      carParks.push(carPark);
+      const carparkRef = ref(db, `users/${uid}/`);
+      const updatedCarParks = [...carParks];
+      set(carparkRef, {
+        favouriteCarpark: updatedCarParks,
+      });
+      console.log("Carpark added successfully!");
+    } else {
+      console.error("Carpark already exists in the list.");
+      return -1;
+    }
+  }
 };
 
 // Removes 1 carpark from database (parameters: A DICTIONARY eg: {lat: 1.3443944759713704,lng: 103.68037761231732})
