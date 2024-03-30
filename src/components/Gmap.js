@@ -9,7 +9,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FaLocationArrow, FaTimes } from "react-icons/fa";
-import SVY21 from "../components/svy21";
 import {
   useLoadScript,
   GoogleMap,
@@ -28,23 +27,11 @@ const mapContainerStyle = {
   margin: "auto",
 };
 
-var carparkList = [
-  // { lat: 1.3443944759713704, lng: 103.68037761231732 },
-  // { lat: 1.3369344, lng: 103.743488 },
-];
-
-// Read favourite carparks
-
-var svy21Converter = new SVY21();
-
 function Gmap() {
   const [center, setCenter] = useState();
-  const [mapLoaded, setMapLoaded] = useState(false);
-  const [svy21N, setsvy21N] = useState(31490.4942); // Northing in SVY21
-  const [svy21E, setsvy21E] = useState(30314.7936); // Easting in SVY21
+
   const [favorite, setFavorite] = useState([]);
   const [carparkList, setCarparkList] = useState([]);
-  var latLonCoordinates = svy21Converter.computeLatLon(svy21N, svy21E);
 
   function myLocation() {
     if (navigator.geolocation) {
@@ -72,7 +59,9 @@ function Gmap() {
       });
     myLocation();
     setCarparkList(CarParkDataConverter());
-    console.log(carparkList);
+
+    // console.log("hehe", carparkList);
+    // console.log("testing", favorite);
   }, []);
 
   const { isLoaded } = useLoadScript({
@@ -169,15 +158,6 @@ function Gmap() {
           }}
           onLoad={(map) => setMap(map)}
         >
-          <MarkerF
-            position={{
-              lat: latLonCoordinates.lat,
-              lng: latLonCoordinates.lon,
-            }}
-            options={{
-              icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/parking_lot_maps.png",
-            }}
-          />
           <MarkerF position={center} />
           {carparkList.map((carpark) => (
             <MarkerF
@@ -188,11 +168,13 @@ function Gmap() {
                     favoriteCarpark.lat === carpark.lat &&
                     favoriteCarpark.lng === carpark.lng
                 )
-                  ? "https://developers.google.com/maps/documentation/javascript/examples/full/images/parking_lot_maps.png"
-                  : {
-                      url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/parking_lot_maps.png",
-                      scaledSize: new window.google.maps.Size(30, 30),
-                    },
+                  ? "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"
+                  : "https://developers.google.com/maps/documentation/javascript/examples/full/images/parking_lot_maps.png",
+
+                // {
+                //     url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+                //     scaledSize: new window.google.maps.Size(30, 30),
+                //   },
               }}
             />
           ))}

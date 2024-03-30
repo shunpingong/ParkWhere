@@ -1,12 +1,6 @@
 import { db, auth } from "./firebase";
-import { ref, set, get, push, update, remove } from "firebase/database";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-} from "firebase/auth";
+import { ref, set, get, update } from "firebase/database";
+
 const getUID = () => {
   return auth.currentUser?.uid;
 };
@@ -55,7 +49,6 @@ const readFavouriteCarparks = () => {
 const writeFavouriteCarparks = (favouriteCarparks) => {
   var uid = getUID();
   const dataLocation = "users";
-  const reference = ref(db, `${dataLocation}/${uid}/`);
 
   //   try {
   //     const user = await readCurrentUserData();
@@ -66,9 +59,9 @@ const writeFavouriteCarparks = (favouriteCarparks) => {
 
 // Adds 1 carpark into database (parameters: A DICTIONARY eg: {lat: 1.3443944759713704,lng: 103.68037761231732})
 const addFavouriteCarpark = (element) => {
-  var uid = getUID();
-  const dataLocation = "users";
-  const reference = ref(db, `${dataLocation}/${uid}`);
+  // var uid = getUID();
+  // const dataLocation = "users";
+  // const reference = ref(db, `${dataLocation}/${uid}`);
   readFavouriteCarparks()
     .then((favouriteCarparksArray) => {
       favouriteCarparksArray.push(element);

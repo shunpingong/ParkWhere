@@ -11,9 +11,7 @@ import Menu from "@mui/material/Menu";
 import { signOut } from "firebase/auth";
 import { auth } from "../backend/firebase";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
 import { ListItemIcon } from "@mui/material";
-import { ContentCut } from "@mui/icons-material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import StarIcon from "@mui/icons-material/Star";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
@@ -58,7 +56,7 @@ export default function Header() {
       // No authenticated user, redirect to login page
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   const handleLogout = () => {
     signOut(auth)
@@ -171,8 +169,8 @@ export default function Header() {
                 <MenuItem
                   onClick={() =>
                     addFavouriteCarpark({
-                      lat: 1.3443944759713704,
-                      lng: 103.68037761231732,
+                      lat: 1.3010626054202958,
+                      lng: 103.85411771659146,
                       cpID: "J91",
                       address: "JURONG WEST ST 91",
                       weekdayRate: "1.20",
