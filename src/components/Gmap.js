@@ -174,27 +174,35 @@ function Gmap() {
           onLoad={(map) => setMap(map)}
         >
           <MarkerF position={center} />
-          {carparkList.map((carpark) => (
+          {/** Render markers for carparks that are in the favourite list */}
+          {favorite.map((carpark) => (
             <MarkerF
               key={carpark.cpID}
               position={carpark}
               options={{
-                icon: favorite?.some(
-                  (favoriteCarpark) =>
-                    favoriteCarpark.lat === carpark.lat &&
-                    favoriteCarpark.lng === carpark.lng
-                )
-                  ? "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"
-                  : "https://developers.google.com/maps/documentation/javascript/examples/full/images/parking_lot_maps.png",
-
-                // {
-                //     url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
-                //     scaledSize: new window.google.maps.Size(30, 30),
-                //   },
+                icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
               }}
               onClick={() => setSelectedCarpark(carpark)}
             />
           ))}
+          {/** Render markers for carparks that are not in the favourite list */}
+          {carparkList.map(
+            (carpark) =>
+              !favorite?.some(
+                (favoriteCarpark) =>
+                  favoriteCarpark.lat === carpark.lat &&
+                  favoriteCarpark.lng === carpark.lng
+              ) && (
+                <MarkerF
+                  key={carpark.cpID}
+                  position={carpark}
+                  options={{
+                    icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/parking_lot_maps.png",
+                  }}
+                  onClick={() => setSelectedCarpark(carpark)}
+                />
+              )
+          )}
           {selectedCarpark && (
             <InfoWindow
               onClick={[

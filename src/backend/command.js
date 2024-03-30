@@ -88,10 +88,9 @@ const addFavouriteCarpark = (carParks, carPark) => {
       set(carparkRef, {
         favouriteCarpark: updatedCarParks,
       });
-      console.log("Carpark added successfully!");
+      alert("Carpark added successfully!");
     } else {
-      console.error("Carpark already exists in the list.");
-      return -1;
+      alert("Carpark already favourited.");
     }
   }
 };
@@ -108,7 +107,7 @@ const removeFavouriteCarpark = (carParks, carPark) => {
     set(carparkRef, {
       favouriteCarpark: updatedCarParks,
     });
-    console.log("Carpark removed successfully!");
+    alert("Carpark removed successfully!");
   } else {
     console.error("Invalid carpark ID.");
     return -1;
@@ -127,7 +126,7 @@ const renameFavouriteCarpark = (carParks, carPark, newCarparkName) => {
       .then(() => {
         const updatedCarParks = [...carParks];
         updatedCarParks[carparkID].cpID = newCarparkName;
-        console.log("Carpark name updated successfully!");
+        alert("Carpark name updated successfully!");
       })
       .catch((error) => {
         console.error("Error updating carpark name:", error);
