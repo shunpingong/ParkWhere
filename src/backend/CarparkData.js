@@ -3,13 +3,11 @@ import { SVY21 } from "../components/svy21";
 
 let cv = new SVY21();
 
-const BASE_URL = "http://localhost:8080/carpark-availability";
-const BASE_URL2 = "http://localhost:8080/carpark-address";
+// const BASE_URL = "http://localhost:8080/carpark-availability";
+// const BASE_URL2 = "http://localhost:8080/carpark-address";
 
-// const BASE_URL =
-//   "https://apiserver-r80iwucdp-shun-pings-projects.vercel.app/carpark-availability";
-// const BASE_URL2 =
-//   "https://apiserver-r80iwucdp-shun-pings-projects.vercel.app/carpark-address";
+const BASE_URL = "https://server-delta-opal-43.vercel.app/carpark-availability";
+const BASE_URL2 = "https://server-delta-opal-43.vercel.app/carpark-address";
 
 async function CarparkData() {
   try {

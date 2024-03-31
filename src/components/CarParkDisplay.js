@@ -10,7 +10,6 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import DriveEtaIcon from "@mui/icons-material/DriveEta";
 import { useState, useEffect } from "react";
-import { NavigationRounded } from "@mui/icons-material";
 
 /**
  * A component for displaying information about a car park.

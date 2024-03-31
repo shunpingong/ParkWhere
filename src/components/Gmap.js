@@ -54,7 +54,6 @@ function Gmap() {
         (position) => {
           var { latitude, longitude } = position.coords;
           setCenter({ lat: latitude, lng: longitude });
-          map.setZoom(15);
           setOriginLat(latitude);
           setOriginLng(longitude);
         },
