@@ -17,6 +17,7 @@ import StarIcon from "@mui/icons-material/Star";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { addFavouriteCarpark, readFavouriteCarparks } from "../backend/command";
+import { CarparkData } from "../backend/CarparkData";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -185,6 +186,13 @@ export default function Header() {
                   }
                 >
                   Write
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    CarparkData();
+                  }}
+                >
+                  Fetch
                 </MenuItem>
               </Menu>
             </div>

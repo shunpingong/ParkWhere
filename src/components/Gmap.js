@@ -31,6 +31,7 @@ import DirectionsIcon from "@mui/icons-material/Directions";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DriveEtaIcon from "@mui/icons-material/DriveEta";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
+import { CarparkData } from "../backend/CarparkData";
 
 const mapContainerStyle = {
   width: "90%",
@@ -89,6 +90,7 @@ function Gmap() {
       });
     myLocation();
     setCarparkList(CarParkDataConverter());
+    // setCarparkList(CarparkData());
   }, []);
 
   const { isLoaded } = useLoadScript({
