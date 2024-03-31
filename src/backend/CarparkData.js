@@ -7,9 +7,9 @@ const BASE_URL = "http://localhost:8080/carpark-availability";
 const BASE_URL2 = "http://localhost:8080/carpark-address";
 
 // const BASE_URL =
-//   "https://apiserver-4my2cc43r-shun-pings-projects.vercel.app/api/carpark-availability";
+//   "https://apiserver-r80iwucdp-shun-pings-projects.vercel.app/carpark-availability";
 // const BASE_URL2 =
-//   "https://apiserver-4my2cc43r-shun-pings-projects.vercel.app/api/carpark-address";
+//   "https://apiserver-r80iwucdp-shun-pings-projects.vercel.app/carpark-address";
 
 async function CarparkData() {
   try {

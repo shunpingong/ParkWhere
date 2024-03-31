@@ -32,6 +32,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import DriveEtaIcon from "@mui/icons-material/DriveEta";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import { CarparkData } from "../backend/CarparkData";
+import * as geolib from "geolib";
 
 const mapContainerStyle = {
   width: "90%",
@@ -53,6 +54,7 @@ function Gmap() {
         (position) => {
           var { latitude, longitude } = position.coords;
           setCenter({ lat: latitude, lng: longitude });
+          map.setZoom(15);
           setOriginLat(latitude);
           setOriginLng(longitude);
         },
@@ -119,7 +121,7 @@ function Gmap() {
     FindCoordinates(destinationRef.current.value, (latitude, longitude) => {
       setCenter({ lat: latitude, lng: longitude });
       map.panTo(center);
-      map.setZoom(20);
+      map.setZoom(15);
     });
   }
 
@@ -151,7 +153,7 @@ function Gmap() {
     setDirectionsResponse(null);
     setDistance("");
     setDuration("");
-    setCenter(null);
+    setCenter(center);
     destinationRef.current.value = "";
   }
 
@@ -190,13 +192,27 @@ function Gmap() {
             />
           ))}
           {/** Render markers for carparks that are not in the favourite list */}
-          {carparkList.map(
-            (carpark) =>
+          {carparkList.map((carpark) => {
+            // Calculate distance between the car park and the center position
+            const distance = geolib.getDistance(
+              { latitude: center.lat, longitude: center.lng },
+              { latitude: carpark.lat, longitude: carpark.lng }
+            );
+
+            // Check if the distance is within 2km
+            const within2km = distance <= 2000; // Assuming the distance is in meters
+
+            // Check if the car park is not in the favorite list and is within 2km from the center position
+            const shouldRender =
               !favorite?.some(
                 (favoriteCarpark) =>
                   favoriteCarpark.lat === carpark.lat &&
                   favoriteCarpark.lng === carpark.lng
-              ) && (
+              ) && within2km;
+
+            // Render the car park marker if it meets the criteria
+            if (shouldRender) {
+              return (
                 <MarkerF
                   key={carpark.cpID}
                   position={carpark}
@@ -205,8 +221,11 @@ function Gmap() {
                   }}
                   onClick={() => setSelectedCarpark(carpark)}
                 />
-              )
-          )}
+              );
+            } else {
+              return null; // Do not render the car park marker
+            }
+          })}
           {selectedCarpark && (
             <InfoWindow
               maxWidth={"auto"}
