@@ -9,6 +9,10 @@ let cv = new SVY21();
 const BASE_URL = "https://server-delta-opal-43.vercel.app/carpark-availability";
 const BASE_URL2 = "https://server-delta-opal-43.vercel.app/carpark-address";
 
+/**
+ * @function CarparkData - Fetches carpark data from the API.
+ * @returns {Promise<Array>} Array of carpark data objects.
+ */
 async function CarparkData() {
   try {
     const [res1, res2] = await Promise.all([

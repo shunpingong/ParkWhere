@@ -20,7 +20,7 @@ const FindCoordinates = (placeName, callback) => {
       const location = data.results[0].geometry.location;
       const latitude = location.lat;
       const longitude = location.lng;
-      // You can now use the latitude and longitude values as needed
+      //use the latitude and longitude values as needed
       callback(latitude, longitude);
     })
     .catch((error) => {

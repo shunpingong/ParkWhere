@@ -14,6 +14,11 @@ import Paper from "@mui/material/Paper";
 import Header from "../components/Header";
 import { signOut } from "firebase/auth";
 
+/**
+ * A component for displaying user profile UI.
+ * @component
+ * @returns {JSX.Element} User Profile UI.
+ */
 export default function UserProfile() {
   const navigate = useNavigate();
   const defaultTheme = createTheme();

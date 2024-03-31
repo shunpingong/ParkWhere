@@ -26,53 +26,25 @@ const readFavouriteCarparks = () => {
           );
           resolve(favouriteCarparks);
         } else {
-          resolve([]); // Return an empty array if the data doesn't exist
+          resolve([]);
         }
       })
       .catch((error) => {
         console.log("Failed to fetch data:", error);
-        reject(error); // Reject the promise with the error
+        reject(error);
       });
   });
 };
 
 /**
- * Writes the favorite car parks for the current user to Firebase.
- * Saves the list of favorite car parks associated with the user's ID to DB
- * @function writeFavouriteCarparks
- * @param {Array<Object>} favoriteCarparks - An array of favorite car park
- * objects to be saved to Firebase. Each object should contain details about
- * a favorite car park, such as its name, location, etc.
- * @returns {Promise<void>} A promise that resolves when the favorite car parks
- * have been successfully written to Firebase.
+ * Adds a car park to the user's favourite car parks list.
+ * @function addFavouriteCarpark
+ * @param {Array<Object>} carParks - An array of favorite car park objects
+ * representing the user's current favourite car parks.
+ * @param {Object} carPark - The car park object to be added to the favourite
+ * car parks list.
+ * @returns {void} No return value.
  */
-
-// const writeFavouriteCarparks = (favouriteCarparks) => {
-//   var uid = getUID();
-//   const dataLocation = "users";
-
-//   //   try {
-//   //     const user = await readCurrentUserData();
-//   set(ref(db, `${dataLocation}/${uid}/`), {
-//     favouriteCarpark: favouriteCarparks,
-//   });
-// };
-
-// Adds 1 carpark into database (parameters: A DICTIONARY eg: {lat: 1.3443944759713704,lng: 103.68037761231732})
-// const addFavouriteCarpark = (element) => {
-//   // var uid = getUID();
-//   // const dataLocation = "users";
-//   // const reference = ref(db, `${dataLocation}/${uid}`);
-//   readFavouriteCarparks()
-//     .then((favouriteCarparksArray) => {
-//       favouriteCarparksArray.push(element);
-//       writeFavouriteCarparks(favouriteCarparksArray);
-//     })
-//     .catch((error) => {
-//       console.error("Error fetching favourite carparks:", error);
-//     });
-// };
-
 const addFavouriteCarpark = (carParks, carPark) => {
   const confirmed = window.confirm(
     "Are you sure you want to add this car park?"
@@ -95,7 +67,15 @@ const addFavouriteCarpark = (carParks, carPark) => {
   }
 };
 
-// Removes 1 carpark from database (parameters: A DICTIONARY eg: {lat: 1.3443944759713704,lng: 103.68037761231732})
+/**
+ * Removes a car park from the user's favourite car parks list.
+ * @function removeFavouriteCarpark
+ * @param {Array<Object>} carParks - An array of favorite car park objects
+ * representing the user's current favourite car parks.
+ * @param {Object} carPark - The car park object to be removed from the favourite
+ * car parks list.
+ * @returns {void} No return value.
+ */
 const removeFavouriteCarpark = (carParks, carPark) => {
   const uid = auth.currentUser.uid;
   const carparkID = carParks.indexOf(carPark);
@@ -114,6 +94,15 @@ const removeFavouriteCarpark = (carParks, carPark) => {
   }
 };
 
+/**
+ * Renames a car park in the user's favourite car parks list.
+ * @function renameFavouriteCarpark
+ * @param {Array<Object>} carParks - An array of favorite car park objects
+ * representing the user's current favourite car parks.
+ * @param {Object} carPark - The car park object to be renamed.
+ * @param {string} newCarparkName - The new name for the car park.
+ * @returns {void} No return value.
+ */
 const renameFavouriteCarpark = (carParks, carPark, newCarparkName) => {
   const uid = auth.currentUser.uid;
   const carparkID = carParks.indexOf(carPark);

@@ -15,12 +15,15 @@ import {
   renameFavouriteCarpark,
 } from "../backend/command";
 import SearchIcon from "@mui/icons-material/Search";
-
 import Header from "../components/Header";
 
+/**
+ * A component for displaying favourite carparks UI.
+ * @component
+ * @returns {JSX.Element} Favourite Carparks UI.
+ */
 export default function FavouriteCarparks() {
   const defaultTheme = createTheme();
-
   const [carParks, setCarParks] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [originLat, setOriginLat] = useState(null);

@@ -19,6 +19,11 @@ import {
 import LockIcon from "@mui/icons-material/Lock";
 import Header from "../components/Header";
 
+/**
+ * A component for displaying change password UI.
+ * @component
+ * @returns {JSX.Element} Change Password UI.
+ */
 const ChangePassword = () => {
   const navigate = useNavigate();
   const [currentPassword, setCurrentPassword] = useState("");

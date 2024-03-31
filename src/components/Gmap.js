@@ -13,19 +13,18 @@ import {
   GoogleMap,
   MarkerF,
   Autocomplete,
-  DirectionsRenderer,
   InfoWindow,
 } from "@react-google-maps/api";
 import { useRef, useState, useEffect } from "react";
 import { readFavouriteCarparks } from "../backend/command";
 import { FindCoordinates } from "../components/FindCoordinates";
-import { CarParkDataConverter } from "../components/CarParkDataConverter";
 import { addFavouriteCarpark } from "../backend/command";
 import { Typography } from "@mui/material";
 import { Grid } from "@mui/material";
 import { red, green, blue } from "@mui/material/colors";
 import MoneyIcon from "@mui/icons-material/Money";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import LocalParkingIcon from "@mui/icons-material/LocalParking";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import DirectionsIcon from "@mui/icons-material/Directions";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -39,7 +38,11 @@ const mapContainerStyle = {
   height: "90vh",
   margin: "auto",
 };
-
+/**
+ * A component for displaying the Google Maps component.
+ * @component
+ * @returns {JSX.Element} Gmap component.
+ */
 function Gmap() {
   const [center, setCenter] = useState();
   const [favorite, setFavorite] = useState([]);
@@ -294,7 +297,9 @@ function Gmap() {
 
                     <Grid container alignItems="center" spacing={1}>
                       <Grid item>
-                        <AccessTimeIcon sx={{ fontSize: 20 }} />
+                        <LocalParkingIcon
+                          sx={{ color: red[500], fontSize: 20 }}
+                        />
                       </Grid>
                       <Grid item>
                         <Typography

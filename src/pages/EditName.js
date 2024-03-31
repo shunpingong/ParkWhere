@@ -15,6 +15,11 @@ import { useEffect } from "react";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import Header from "../components/Header";
 
+/**
+ * A component for displaying edit name UI.
+ * @component
+ * @returns {JSX.Element} Edit Name UI.
+ */
 const EditName = () => {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");

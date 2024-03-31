@@ -16,9 +16,12 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import StarIcon from "@mui/icons-material/Star";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import { addFavouriteCarpark, readFavouriteCarparks } from "../backend/command";
-import { CarparkData } from "../backend/CarparkData";
 
+/**
+ * A component for displaying the header of the application.
+ * @component
+ * @returns {JSX.Element} Header component.
+ */
 export default function Header() {
   const navigate = useNavigate();
   const [mainAnchorEl, setMainAnchorEl] = React.useState(null);
@@ -165,34 +168,6 @@ export default function Header() {
                   <ListItemIcon style={{ marginLeft: "5px" }}>
                     <LogoutIcon fontSize="small" />
                   </ListItemIcon>
-                </MenuItem>
-                <MenuItem onClick={readFavouriteCarparks}> Read </MenuItem>
-                <MenuItem
-                  onClick={() =>
-                    addFavouriteCarpark({
-                      lat: 1.3010626054202958,
-                      lng: 103.85411771659146,
-                      cpID: "J91",
-                      address: "JURONG WEST ST 91",
-                      weekdayRate: "1.20",
-                      weekdayMin: "30 mins",
-                      satdayRate: "1.20",
-                      satdayMin: "30 mins",
-                      sunPHRate: "1.20",
-                      sunPHMin: "30 mins",
-                      startTime: "7:00 AM",
-                      endTime: "10:00 PM",
-                    })
-                  }
-                >
-                  Write
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    CarparkData();
-                  }}
-                >
-                  Fetch
                 </MenuItem>
               </Menu>
             </div>

@@ -11,7 +11,6 @@
  * var svy21Coordinates = svy21Converter.computeSVY21(lat, lon);
  * console.log("SVY21 Coordinates:", svy21Coordinates.N, svy21Coordinates.E);
  */
-
 export let SVY21 = function () {
   // Ref: http://www.linz.govt.nz/geodetic/conversion-coordinates/projection-conversions/transverse-mercator-preliminary-computations/index.aspx
 
