@@ -121,11 +121,11 @@ const renameFavouriteCarpark = (carParks, carPark, newCarparkName) => {
     // If the user entered a name and the carparkID is valid
     const carparkRef = ref(db, `users/${uid}/favouriteCarpark/${carparkID}`);
     update(carparkRef, {
-      cpID: newCarparkName,
+      name: newCarparkName,
     })
       .then(() => {
         const updatedCarParks = [...carParks];
-        updatedCarParks[carparkID].cpID = newCarparkName;
+        updatedCarParks[carparkID].name = newCarparkName;
         alert("Carpark name updated successfully!");
       })
       .catch((error) => {

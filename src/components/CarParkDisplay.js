@@ -78,7 +78,7 @@ function CarParkDisplay({
       <Grid container alignItems="center">
         <Grid item xs={12}>
           <Typography variant="h5" sx={{ mb: 1 }}>
-            {carPark.cpID}
+            {carPark.name}
           </Typography>
           <Grid container alignItems="center" spacing={1} sx={{ mt: 1 }}>
             <Grid item>

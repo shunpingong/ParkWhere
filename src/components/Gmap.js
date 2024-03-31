@@ -89,7 +89,9 @@ function Gmap() {
         console.error("Error fetching favourite carparks:", error);
       });
     myLocation();
-    setCarparkList(CarParkDataConverter());
+    CarparkData().then((data) => {
+      setCarparkList(data);
+    });
     // setCarparkList(CarparkData());
   }, []);
 
@@ -207,17 +209,30 @@ function Gmap() {
           )}
           {selectedCarpark && (
             <InfoWindow
+              maxWidth={"auto"}
+              maxHeight={"auto"}
               onClick={[
                 calculateRoute(selectedCarpark.lat, selectedCarpark.lng),
               ]}
               position={selectedCarpark}
               onCloseClick={() => setSelectedCarpark(null)}
+              shouldFocus={true}
             >
-              <Box>
+              <Box
+                sx={{
+                  // width: "auto",
+                  // height: "auto",
+                  // border: "1px groove black",
+                  bgcolor: "blue",
+                  "&:hover": {
+                    bgcolor: "red",
+                  },
+                }}
+              >
                 <Grid container alignItems="center">
                   <Grid item xs={12}>
                     <Typography variant="h5" sx={{ mb: 1 }}>
-                      {selectedCarpark.cpID}
+                      {selectedCarpark.name}
                     </Typography>
                     <Grid
                       container
@@ -255,6 +270,27 @@ function Gmap() {
                       <Grid item>
                         <Typography variant="body1" fontSize={16}>
                           <strong>Estimated Duration:</strong> {duration}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container alignItems="center" spacing={1}>
+                      <Grid item>
+                        <AccessTimeIcon sx={{ fontSize: 20 }} />
+                      </Grid>
+                      <Grid item>
+                        <Typography
+                          variant="body1"
+                          fontSize={16}
+                          sx={{
+                            color:
+                              selectedCarpark.availableLots < 10
+                                ? "red"
+                                : "black",
+                          }}
+                        >
+                          <strong>Lots Available:</strong>{" "}
+                          {selectedCarpark.availableLots}
                         </Typography>
                       </Grid>
                     </Grid>

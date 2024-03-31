@@ -70,7 +70,7 @@ export default function FavouriteCarparks() {
   const handleRenameFavouriteCarpark = (carpark) => {
     const newCarparkName = prompt(
       "Enter the new name for the carpark:",
-      carpark.cpID
+      carpark.name
     );
     if (newCarparkName !== null) {
       renameFavouriteCarpark(carParks, carpark, newCarparkName);
@@ -143,7 +143,7 @@ export default function FavouriteCarparks() {
           <Grid container spacing={2}>
             {carParks
               ?.filter((carPark) =>
-                carPark.cpID.toLowerCase().includes(searchQuery.toLowerCase())
+                carPark.name.toLowerCase().includes(searchQuery.toLowerCase())
               )
               .map((carPark, index) => (
                 <Grid item xs={12} key={index}>

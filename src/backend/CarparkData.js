@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
 import { SVY21 } from "../components/svy21";
 
 let cv = new SVY21();
 
-const BASE_URL =
-  "https://server-meios66gr-shun-pings-projects.vercel.app/carpark-availability";
+// const BASE_URL = "http://localhost:8080/carpark-availability";
+// const BASE_URL2 = "http://localhost:8080/carpark-address";
 
+const BASE_URL =
+  "https://apiserver-ighz0rqdk-shun-pings-projects.vercel.app/api/carpark-availability";
 const BASE_URL2 =
-  "https://server-meios66gr-shun-pings-projects.vercel.app/carpark-address";
+  "https://apiserver-ighz0rqdk-shun-pings-projects.vercel.app/api/carpark-address";
 
 async function CarparkData() {
   try {
@@ -16,33 +17,36 @@ async function CarparkData() {
       axios.get(BASE_URL),
       axios.get(BASE_URL2),
     ]);
-    const carparkWithLots = res1.data; // [ {}, {}]
-    const carparkWithAddr = res2.data; // [ {}, {}]
 
-    const merge = carparkWithLots.map((item) => {
-      const findMatching = carparkWithAddr.find(
-        (cp) => cp.car_park_no === item.carpark_number
-      );
+    // Extracting ID and available lots information
+    const idAndLotsArray = res1.data.map((item) => ({
+      id: item.carpark_number, // Assuming 'carpark_number' is the ID field
+      availableLots: item.carpark_info[0].lots_available, // Assuming 'carpark_info' contains lot information
+    }));
+
+    const idAndAddr = res2.data.map((item) => ({
+      id: item.car_park_no,
+      address: item.address,
+      x_coord: item.x_coord,
+      y_coord: item.y_coord,
+    }));
+
+    const merge = idAndLotsArray.map((item) => {
+      const findMatching = idAndAddr.find((cp) => cp.id === item.id);
 
       const coordinates = cv.computeLatLon(
         findMatching?.y_coord,
         findMatching?.x_coord
       );
 
-      const newObj = findMatching
-        ? {
-            ...item,
-            ...findMatching,
-            lat: coordinates.lat.toFixed(7),
-            lon: coordinates.lon.toFixed(7),
-          }
-        : {
-            ...item,
-            carpark_info: [],
-            update_datetime: "Not available",
-            lat: coordinates.lat.toFixed(7),
-            lon: coordinates.lon.toFixed(7),
-          };
+      const newObj = {
+        cpID: "CP-" + item.id,
+        name: "CP-" + item.id,
+        availableLots: item.availableLots,
+        address: findMatching?.address,
+        lat: coordinates.lat,
+        lng: coordinates.lon,
+      };
       return newObj;
     });
     return merge;
