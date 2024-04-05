@@ -19,7 +19,7 @@ const CarParkLots = ({ carPark }) => {
     <>
       <Grid container alignItems="center" spacing={1}>
         <Grid item>
-          {percentage_available > 20 ? (
+          {percentage_available > 10 ? (
             <CheckCircleOutlineIcon sx={{ color: green[500], fontSize: 20 }} />
           ) : (
             <CancelIcon sx={{ color: red[500], fontSize: 20 }} />
@@ -30,7 +30,7 @@ const CarParkLots = ({ carPark }) => {
             variant="body1"
             fontSize={16}
             sx={{
-              color: percentage_available < 20 ? "red" : "green",
+              color: percentage_available < 10 ? "red" : "green",
             }}
           >
             <strong>Availability:</strong>{" "}

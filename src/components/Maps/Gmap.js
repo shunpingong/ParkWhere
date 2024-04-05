@@ -130,7 +130,7 @@ function Gmap() {
   }
 
   function isFavourite(carpark) {
-    return !favorite?.some(
+    return favorite?.some(
       (favoriteCarpark) =>
         favoriteCarpark.lat === carpark.lat &&
         favoriteCarpark.lng === carpark.lng
@@ -160,20 +160,6 @@ function Gmap() {
           onLoad={(map) => setMap(map)}
         >
           <MarkerF position={center} />
-          {/** Render markers for carparks that are in the favourite list */}
-          {favorite.map((carpark) => (
-            <MarkerF
-              key={carpark.cpID}
-              position={carpark}
-              options={{
-                icon: {
-                  url: "https://cdn-icons-png.flaticon.com/512/4340/4340223.png",
-                  scaledSize: new window.google.maps.Size(30, 30),
-                },
-              }}
-              onClick={() => setSelectedCarpark(carpark)}
-            />
-          ))}
 
           {/** Render markers for carparks that are not in the favourite list */}
           {carparkList.map((carpark) => {
@@ -186,22 +172,38 @@ function Gmap() {
             // Check if the distance is within 2km
             const within2km = distance <= 2000; // Assuming the distance is in meters
 
+            // Determine the icon URL based on availability and favorite status
+            let iconUrl = isFavourite(carpark)
+              ? "https://cdn-icons-png.flaticon.com/512/4340/4340223.png"
+              : "https://developers.google.com/maps/documentation/javascript/examples/full/images/parking_lot_maps.png";
+
+            if (
+              Math.round((carpark.availableLots / carpark.totalLots) * 100) < 10
+            ) {
+              iconUrl =
+                "https://cdn-icons-png.flaticon.com/512/3009/3009039.png";
+            }
+
             // Render the car park marker if it meets the criteria
-            if (isFavourite(carpark) && within2km) {
+            if (within2km) {
               return (
                 <MarkerF
                   key={carpark.cpID}
                   position={carpark}
                   options={{
-                    icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/parking_lot_maps.png",
+                    icon: {
+                      url: iconUrl,
+                      scaledSize: new window.google.maps.Size(30, 30),
+                    },
                   }}
                   onClick={() => setSelectedCarpark(carpark)}
                 />
               );
             } else {
-              return null; // Do not render the car park marker
+              return null; // Render nothing if the car park doesn't meet the criteria
             }
           })}
+
           {selectedCarpark && (
             <InfoWindow
               maxWidth={"auto"}
