@@ -77,20 +77,25 @@ const addFavouriteCarpark = (carParks, carPark) => {
  * @returns {void} No return value.
  */
 const removeFavouriteCarpark = (carParks, carPark) => {
-  const uid = auth.currentUser.uid;
-  const carparkID = carParks.indexOf(carPark);
-  if (carparkID !== -1) {
-    // If the carparkID is valid
-    carParks.splice(carparkID, 1);
-    const carparkRef = ref(db, `users/${uid}/`);
-    const updatedCarParks = [...carParks];
-    set(carparkRef, {
-      favouriteCarpark: updatedCarParks,
-    });
-    alert("Carpark removed successfully!");
-  } else {
-    console.error("Invalid carpark ID.");
-    return -1;
+  const confirmed = window.confirm(
+    "Are you sure you want to remove this car park?"
+  );
+  if (confirmed) {
+    const uid = auth.currentUser.uid;
+    const carparkID = carParks.indexOf(carPark);
+    if (carparkID !== -1) {
+      // If the carparkID is valid
+      carParks.splice(carparkID, 1);
+      const carparkRef = ref(db, `users/${uid}/`);
+      const updatedCarParks = [...carParks];
+      set(carparkRef, {
+        favouriteCarpark: updatedCarParks,
+      });
+      alert("Carpark removed successfully!");
+    } else {
+      console.error("Invalid carpark ID.");
+      return -1;
+    }
   }
 };
 

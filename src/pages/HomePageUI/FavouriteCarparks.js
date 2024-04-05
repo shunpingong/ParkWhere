@@ -8,14 +8,14 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { Grid, TextField, IconButton, Paper } from "@mui/material";
-import CarParkDisplay from "../components/CarParkDisplay";
+import CarParkDisplay from "../../components/Carparks/CarParkDisplay";
 import {
   readFavouriteCarparks,
   removeFavouriteCarpark,
   renameFavouriteCarpark,
-} from "../backend/command";
+} from "../../backend/command";
 import SearchIcon from "@mui/icons-material/Search";
-import Header from "../components/Header";
+import Header from "../../components/Maps/Header";
 
 /**
  * A component for displaying favourite carparks UI.

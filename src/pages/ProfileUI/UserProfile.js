@@ -7,11 +7,11 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { auth } from "../backend/firebase";
+import { auth } from "../../backend/firebase";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Paper from "@mui/material/Paper";
-import Header from "../components/Header";
+import Header from "../../components/Maps/Header";
 import { signOut } from "firebase/auth";
 
 /**

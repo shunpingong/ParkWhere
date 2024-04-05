@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { getAuth, updateProfile } from "firebase/auth";
 import { useEffect } from "react";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-import Header from "../components/Header";
+import Header from "../../components/Maps/Header";
 
 /**
  * A component for displaying edit name UI.

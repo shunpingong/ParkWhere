@@ -1,14 +1,14 @@
-import LoginPage from "./pages/LoginPage";
+import LoginPage from "./pages/AuthenticatorUI/LoginPage";
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ForgotPassword from "./pages/ForgotPassword";
-import SignUp from "./pages/SignUp";
-import HomePage from "./pages/HomePage";
-import NotFound from "./pages/NotFound";
-import ChangePassword from "./pages/ChangePassword";
-import EditName from "./pages/EditName";
-import UserProfile from "./pages/UserProfile";
-import FavouriteCarparks from "./pages/FavouriteCarparks";
+import ForgotPassword from "./pages/AuthenticatorUI/ForgotPassword";
+import SignUp from "./pages/AuthenticatorUI/SignUp";
+import HomePage from "./pages/HomePageUI/HomePage";
+import NotFound from "./pages/AuthenticatorUI/NotFound";
+import ChangePassword from "./pages/ProfileUI/ChangePassword";
+import EditName from "./pages/ProfileUI/EditName";
+import UserProfile from "./pages/ProfileUI/UserProfile";
+import FavouriteCarparks from "./pages/HomePageUI/FavouriteCarparks";
 
 /**
  * A component for rendering the entire application.

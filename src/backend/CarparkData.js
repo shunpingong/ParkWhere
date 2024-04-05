@@ -1,19 +1,17 @@
 import axios from "axios";
-import { SVY21 } from "../components/svy21";
-
-let cv = new SVY21();
-
-// const BASE_URL = "http://localhost:8080/carpark-availability";
-// const BASE_URL2 = "http://localhost:8080/carpark-address";
-
-const BASE_URL = "https://server-delta-opal-43.vercel.app/carpark-availability";
-const BASE_URL2 = "https://server-delta-opal-43.vercel.app/carpark-address";
+import { SVY21 } from "../components/Maps/svy21";
 
 /**
  * @function CarparkData - Fetches carpark data from the API.
  * @returns {Promise<Array>} Array of carpark data objects.
  */
 async function CarparkData() {
+  let cv = new SVY21();
+
+  const BASE_URL =
+    "https://server-delta-opal-43.vercel.app/carpark-availability";
+  const BASE_URL2 = "https://server-delta-opal-43.vercel.app/carpark-address";
+
   try {
     const [res1, res2] = await Promise.all([
       axios.get(BASE_URL),
@@ -24,6 +22,7 @@ async function CarparkData() {
     const idAndLotsArray = res1.data.map((item) => ({
       id: item.carpark_number, // Assuming 'carpark_number' is the ID field
       availableLots: item.carpark_info[0].lots_available, // Assuming 'carpark_info' contains lot information
+      totalLots: item.carpark_info[0].total_lots,
     }));
 
     const idAndAddr = res2.data.map((item) => ({
@@ -45,9 +44,17 @@ async function CarparkData() {
         cpID: "CP-" + item.id,
         name: "CP-" + item.id,
         availableLots: item.availableLots,
+        totalLots: item.totalLots,
         address: findMatching?.address,
         lat: coordinates.lat,
         lng: coordinates.lon,
+        weekdayRate: "0.60",
+        weekdayMin: "30",
+        satdayRate: "0.60",
+        satdayMin: "30",
+        sunPHRate: "Free",
+        startTime: "7:00 AM",
+        endTime: "10:30 PM",
       };
       return newObj;
     });

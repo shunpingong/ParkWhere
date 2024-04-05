@@ -14,7 +14,7 @@ import validator from "validator";
 import KeyIcon from "@mui/icons-material/Key";
 import { sendPasswordResetEmail, getAuth } from "firebase/auth";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Copyright from "../components/Copyright";
+import Copyright from "../.././components/Copyright";
 
 /**
  * A component for displaying forgot password UI.

@@ -11,10 +11,10 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../backend/firebase";
+import { auth } from "../../backend/firebase";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
-import Copyright from "../components/Copyright";
+import Copyright from "../../components/Copyright";
 
 /**
  * A component for displaying sign up UI.

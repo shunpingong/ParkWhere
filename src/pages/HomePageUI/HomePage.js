@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { Box } from "@mui/material";
-import { auth } from "../backend/firebase";
+import { auth } from "../../backend/firebase";
 import { useNavigate } from "react-router-dom";
-import Gmap from "../components/Gmap";
-import Header from "../components/Header";
+import Gmap from "../../components/Maps/Gmap";
+import Header from "../../components/Maps/Header";
 
 /**
  * A component for displaying home page UI.
