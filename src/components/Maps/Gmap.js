@@ -145,6 +145,7 @@ function Gmap() {
           }}
           onLoad={(map) => setMap(map)}
         >
+          {/* Render marker for the user's current location */}
           <MarkerF position={center} />
 
           {/** Render markers for carparks that are not in the favourite list */}
@@ -176,27 +177,26 @@ function Gmap() {
             );
 
             // Check if favCarpark is found
-            if (favCarpark) {
-              carpark.name = favCarpark.name;
+            let cp;
+            {
+              favCarpark ? (cp = favCarpark) : (cp = carpark);
             }
 
             // Render the car park marker if it meets the criteria
             if (within2km) {
               return (
                 <MarkerF
-                  key={carpark.cpID}
-                  position={carpark}
+                  key={cp.cpID}
+                  position={cp}
                   options={{
                     icon: {
                       url: iconUrl,
                       scaledSize: new window.google.maps.Size(30, 30),
                     },
                   }}
-                  onClick={() => setSelectedCarpark(carpark)}
+                  onClick={() => setSelectedCarpark(cp)}
                 />
               );
-            } else {
-              return null; // Render nothing if the car park doesn't meet the criteria
             }
           })}
 
