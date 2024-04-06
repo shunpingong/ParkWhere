@@ -41,14 +41,14 @@ const CarParkLots = ({ carPark }) => {
 
       <Grid container alignItems="center" spacing={1}>
         <Grid item>
-          <LocalParkingIcon sx={{ color: red[500], fontSize: 20 }} />
+          <LocalParkingIcon sx={{ color: blue[800], fontSize: 20 }} />
         </Grid>
         <Grid item>
           <Typography
             variant="body1"
             fontSize={16}
             sx={{
-              color: carPark.availableLots < 10 ? "red" : "black",
+              color: percentage_available < 10 ? "red" : "black",
             }}
           >
             <strong>Lots Available:</strong> {carPark.availableLots} /{" "}

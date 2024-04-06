@@ -15,7 +15,8 @@ import {
   renameFavouriteCarpark,
 } from "../../backend/command";
 import SearchIcon from "@mui/icons-material/Search";
-import Header from "../../components/Maps/Header";
+import Header from "../../components/Header";
+import { useNavigate } from "react-router-dom";
 
 /**
  * A component for displaying favourite carparks UI.
@@ -24,20 +25,31 @@ import Header from "../../components/Maps/Header";
  */
 export default function FavouriteCarparks() {
   const defaultTheme = createTheme();
-  const [carParks, setCarParks] = useState([]);
+  const [favouriteCarParks, setFavouriteCarParks] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [originLat, setOriginLat] = useState(null);
   const [originLng, setOriginLng] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchFavouriteCarparks();
     fetchGeoLocation();
   }, []);
 
+  useEffect(() => {
+    // Check if the user is already logged in
+    const loggedInUser = localStorage.getItem("user");
+
+    // If the user is not logged in, redirect to the login page
+    if (!loggedInUser) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   const fetchFavouriteCarparks = async () => {
     try {
       const favouriteCarparks = await readFavouriteCarparks();
-      setCarParks(favouriteCarparks);
+      setFavouriteCarParks(favouriteCarparks);
     } catch (error) {
       console.error("Error fetching favourite carparks:", error);
     }
@@ -61,13 +73,8 @@ export default function FavouriteCarparks() {
   };
 
   const handleRemoveFavouriteCarpark = async (carpark) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to remove this car park?"
-    );
-    if (confirmed) {
-      removeFavouriteCarpark(carParks, carpark);
-      fetchFavouriteCarparks();
-    }
+    removeFavouriteCarpark(favouriteCarParks, carpark);
+    fetchFavouriteCarparks();
   };
 
   const handleRenameFavouriteCarpark = (carpark) => {
@@ -76,7 +83,7 @@ export default function FavouriteCarparks() {
       carpark.name
     );
     if (newCarparkName !== null) {
-      renameFavouriteCarpark(carParks, carpark, newCarparkName);
+      renameFavouriteCarpark(favouriteCarParks, carpark, newCarparkName);
       fetchFavouriteCarparks();
     }
   };
@@ -144,7 +151,7 @@ export default function FavouriteCarparks() {
             }}
           />
           <Grid container spacing={2}>
-            {carParks
+            {favouriteCarParks
               ?.filter((carPark) =>
                 carPark.name.toLowerCase().includes(searchQuery.toLowerCase())
               )

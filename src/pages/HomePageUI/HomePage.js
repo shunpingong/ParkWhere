@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { auth } from "../../backend/firebase";
 import { useNavigate } from "react-router-dom";
 import Gmap from "../../components/Maps/Gmap";
-import Header from "../../components/Maps/Header";
+import Header from "../../components/Header";
 
 /**
  * A component for displaying home page UI.

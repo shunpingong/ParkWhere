@@ -33,6 +33,10 @@ export default function LoginPage() {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         navigate("/homepage");
+        localStorage.setItem(
+          "user",
+          JSON.stringify(userCredential.user.getIdToken())
+        );
       })
       .catch((err) => {
         if (

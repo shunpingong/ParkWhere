@@ -7,7 +7,7 @@ import {
   IconButton,
   Input,
 } from "@chakra-ui/react";
-import { FaLocationArrow, FaTimes } from "react-icons/fa";
+import { FaLocationArrow, FaTimes, FaVoicemail } from "react-icons/fa";
 import {
   useLoadScript,
   GoogleMap,
@@ -184,6 +184,16 @@ function Gmap() {
                 "https://cdn-icons-png.flaticon.com/512/3009/3009039.png";
             }
 
+            // Iterate through each element in the favorite array and find the one with the matching cpID
+            const favCarpark = favorite.find(
+              (favCarpark) => favCarpark.cpID === carpark.cpID
+            );
+
+            // Check if favCarpark is found
+            if (favCarpark) {
+              carpark.name = favCarpark.name;
+            }
+
             // Render the car park marker if it meets the criteria
             if (within2km) {
               return (
@@ -206,8 +216,6 @@ function Gmap() {
 
           {selectedCarpark && (
             <InfoWindow
-              maxWidth={"auto"}
-              maxHeight={"auto"}
               position={selectedCarpark}
               onCloseClick={() => setSelectedCarpark(null)}
               shouldFocus={true}
@@ -241,7 +249,7 @@ function Gmap() {
                       <DirectionsIcon sx={{ color: blue[500], fontSize: 32 }} />
                     </IconButton>
 
-                    {isFavourite(selectedCarpark) ? (
+                    {!isFavourite(selectedCarpark) ? (
                       <IconButton
                         onClick={() => (
                           addFavouriteCarpark(favorite, selectedCarpark),

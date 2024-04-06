@@ -17,7 +17,7 @@ import {
   reauthenticateWithCredential,
 } from "firebase/auth";
 import LockIcon from "@mui/icons-material/Lock";
-import Header from "../../components/Maps/Header";
+import Header from "../../components/Header";
 
 /**
  * A component for displaying change password UI.
