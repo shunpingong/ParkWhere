@@ -17,6 +17,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
+import { GenerateDirectionsLink } from "../../components/Maps/GenerateDirectionLink";
 
 /**
  * A component for displaying favourite carparks UI.
@@ -85,15 +86,6 @@ export default function FavouriteCarparks() {
     if (newCarparkName !== null) {
       renameFavouriteCarpark(favouriteCarParks, carpark, newCarparkName);
       fetchFavouriteCarparks();
-    }
-  };
-
-  const generateDirectionsLink = (destLat, destLng) => {
-    if (originLat && originLng) {
-      const url = `https://www.google.com/maps/dir/?api=1&origin=${originLat},${originLng}&destination=${destLat},${destLng}&travelmode=driving`;
-      window.open(url, "_blank");
-    } else {
-      console.error("Geolocation data not available yet.");
     }
   };
 
@@ -170,7 +162,7 @@ export default function FavouriteCarparks() {
                       <CarParkDisplay
                         carPark={carPark}
                         onGenerateDirectionsLink={(lat, lng) =>
-                          generateDirectionsLink(lat, lng)
+                          GenerateDirectionsLink(lat, lng, originLat, originLng)
                         }
                         onRemove={() => handleRemoveFavouriteCarpark(carPark)}
                         onRename={() => handleRenameFavouriteCarpark(carPark)}

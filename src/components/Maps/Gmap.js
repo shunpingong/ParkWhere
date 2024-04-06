@@ -7,7 +7,7 @@ import {
   IconButton,
   Input,
 } from "@chakra-ui/react";
-import { FaLocationArrow, FaTimes, FaVoicemail } from "react-icons/fa";
+import { FaLocationArrow, FaTimes } from "react-icons/fa";
 import {
   useLoadScript,
   GoogleMap,
@@ -32,6 +32,7 @@ import * as geolib from "geolib";
 import CarParkDetails from "../Carparks/CarParkDetails";
 import CarParkRates from "../Carparks/CarParkRates";
 import CarParkLots from "../Carparks/CarParkLots";
+import { GenerateDirectionsLink } from "./GenerateDirectionLink";
 
 const mapContainerStyle = {
   width: "90%",
@@ -72,21 +73,6 @@ function Gmap() {
       console.error(`Your browser doesn't support Geolocation`);
     }
   }
-
-  const generateDirectionsLink = (destLat, destLng) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to navigate to this car park?"
-    );
-
-    if (confirmed) {
-      if (navigator.geolocation && center) {
-        const url = `https://www.google.com/maps/dir/?api=1&origin=${originLat},${originLng}&destination=${destLat},${destLng}&travelmode=driving`;
-        window.open(url, "_blank");
-      } else {
-        console.error("Geolocation data not available yet.");
-      }
-    }
-  };
 
   useEffect(() => {
     readFavouriteCarparks()
@@ -240,9 +226,11 @@ function Gmap() {
                   <Grid item xs={12} container justifyContent="flex-end">
                     <IconButton
                       onClick={() =>
-                        generateDirectionsLink(
+                        GenerateDirectionsLink(
                           selectedCarpark.lat,
-                          selectedCarpark.lng
+                          selectedCarpark.lng,
+                          originLat,
+                          originLng
                         )
                       }
                     >
