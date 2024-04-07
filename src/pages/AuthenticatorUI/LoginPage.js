@@ -50,6 +50,8 @@ export default function LoginPage() {
           setErrorMessage("Invalid Password, the password is incorrect.");
         } else if (err.code === "auth/missing-password") {
           setErrorMessage("Please enter your password.");
+        } else if (err.code === "auth/invalid-login-credentials") {
+          setErrorMessage("Invalid login credentials. Please try again.");
         } else {
           setErrorMessage(err.message);
         }

@@ -166,10 +166,14 @@ function Gmap() {
 
             if (
               Math.round((carpark.availableLots / carpark.totalLots) * 100) < 10
-            ) {
-              iconUrl =
-                "https://cdn-icons-png.flaticon.com/512/3009/3009039.png";
-            }
+            )
+              if (isFavourite(carpark)) {
+                iconUrl =
+                  "https://cdn-icons-png.flaticon.com/512/4340/4340223.png";
+              } else {
+                iconUrl =
+                  "https://cdn-icons-png.flaticon.com/512/3009/3009039.png";
+              }
 
             // Iterate through each element in the favorite array and find the one with the matching cpID
             const favCarpark = favorite.find(
