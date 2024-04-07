@@ -42,6 +42,12 @@ export default function SignUp() {
       setErrorMessage("Invalid phone number.");
       return;
     }
+    if (validator.isStrongPassword(password) === false) {
+      setErrorMessage(
+        "Password is not strong enough. Add additional characters including special characters, capital letters and numbers."
+      );
+      return;
+    }
     createUserWithEmailAndPassword(auth, email, password) // create user with email and password
       .then(() => {
         updateProfile(auth.currentUser, {

@@ -18,6 +18,7 @@ import {
 } from "firebase/auth";
 import LockIcon from "@mui/icons-material/Lock";
 import Header from "../../components/Header";
+import validator from "validator";
 
 /**
  * A component for displaying change password UI.
@@ -47,6 +48,14 @@ const ChangePassword = () => {
       setLoading(false);
       return;
     }
+    if (validator.isStrongPassword(newPassword) === false) {
+      alert(
+        "Password is not strong enough. Add additional characters including special characters, capital letters and numbers."
+      );
+      setLoading(false);
+      return;
+    }
+
     setLoading(false);
     const credential = EmailAuthProvider.credential(
       auth.currentUser.email,
