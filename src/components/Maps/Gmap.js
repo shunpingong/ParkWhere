@@ -307,7 +307,11 @@ function Gmap() {
               aria-label="center back"
               icon={<FaLocationArrow />}
               isRound
-              onClick={myLocation}
+              onClick={() => {
+                myLocation();
+                map.panTo(center);
+                map.setZoom(15);
+              }}
             />
           </ButtonGroup>
         </HStack>
