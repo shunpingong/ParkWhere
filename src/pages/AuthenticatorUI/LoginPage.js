@@ -15,6 +15,7 @@ import { GoogleButton } from "react-google-button";
 import Container from "@mui/material/Container";
 import logo from "../../assets/logo.png";
 import Copyright from "../../components/Copyright";
+import { set } from "firebase/database";
 
 /**
  * A component for displaying login page UI.
@@ -32,11 +33,16 @@ export default function LoginPage() {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        navigate("/homepage");
-        localStorage.setItem(
-          "user",
-          JSON.stringify(userCredential.user.getIdToken())
-        );
+        const user = userCredential.user;
+        if (user.emailVerified) {
+          // Email is verified
+          navigate("/homepage");
+        } else {
+          // Email is not verified("");
+          setErrorMessage("Email is not verified. Please verify your email.");
+
+          // Optionally, you can display an error message to the user
+        }
       })
       .catch((err) => {
         if (

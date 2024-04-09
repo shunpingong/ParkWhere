@@ -74,7 +74,7 @@ const ChangePassword = () => {
       .then(() => {
         setLoading(false);
         alert("Password updated successfully");
-        navigate("/userprofile");
+        navigate("/");
       })
       .catch((error) => {
         setLoading(false);
