@@ -97,7 +97,11 @@ export default function UserProfile() {
               fullWidth
               variant="contained"
               color="primary"
-              onClick={() => navigate("/changepassword")}
+              onClick={() =>
+                auth.currentUser.email === "test@account.com"
+                  ? alert("You can't change the test account's password.")
+                  : navigate("/changepassword")
+              }
               sx={{ mb: 2 }}
             >
               Change Password
