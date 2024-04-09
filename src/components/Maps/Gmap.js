@@ -187,7 +187,7 @@ function Gmap() {
             }
 
             // Render the car park marker if it meets the criteria
-            if (within2km) {
+            if (favCarpark || within2km) {
               return (
                 <MarkerF
                   key={cp.cpID}
