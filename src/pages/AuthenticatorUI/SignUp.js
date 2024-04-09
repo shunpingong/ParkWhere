@@ -46,6 +46,14 @@ export default function SignUp() {
       setErrorMessage("Invalid phone number.");
       return;
     }
+    if (validator.isEmail(email) === false) {
+      setErrorMessage("Invalid email address.");
+      return;
+    }
+    if (password.length === 0) {
+      setErrorMessage("Password should not be empty.");
+      return;
+    }
     if (validator.isStrongPassword(password) === false) {
       setErrorMessage(
         "Password is not strong enough. Add additional characters including special characters, capital letters and numbers."
