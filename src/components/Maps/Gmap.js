@@ -73,6 +73,21 @@ function Gmap() {
       console.error(`Your browser doesn't support Geolocation`);
     }
   }
+  useEffect(() => {
+    // Watch for changes in geolocation
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setCenter({ lat: latitude, lng: longitude }); // Update the center of the map
+      },
+      (error) => {
+        console.error(`Error getting geolocation: ${error.message}`);
+      }
+    );
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  }, [center]);
 
   useEffect(() => {
     readFavouriteCarparks()
