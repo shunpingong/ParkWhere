@@ -87,7 +87,7 @@ function Gmap() {
     return () => {
       navigator.geolocation.clearWatch(watchId);
     };
-  }, [center]);
+  }, []);
 
   useEffect(() => {
     readFavouriteCarparks()
