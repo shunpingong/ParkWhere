@@ -18,6 +18,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
 import { GenerateDirectionsLink } from "../../components/Maps/GenerateDirectionLink";
+import { auth } from "../../backend/firebase";
 
 /**
  * A component for displaying favourite carparks UI.
@@ -39,13 +40,11 @@ export default function FavouriteCarparks() {
 
   useEffect(() => {
     // Check if the user is already logged in
-    const loggedInUser = localStorage.getItem("user");
-
-    // If the user is not logged in, redirect to the login page
-    if (!loggedInUser) {
+    if (!auth.currentUser) {
+      // No authenticated user, redirect to login pag
       navigate("/");
     }
-  }, [navigate]);
+  }, [auth.currentUser, navigate]);
 
   const fetchFavouriteCarparks = async () => {
     try {
